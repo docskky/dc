@@ -1,0 +1,16 @@
+{
+    "version" : "0.1",
+    "db_host" : "localhost",
+    "db_user" : "ai",
+    "db_pw" : "ajuRi5@9",
+    "db_name" : "aistocks",
+    "bars_count" : 30,
+
+    "commission_percent" : 0.015,
+    "init_caches" : 100.0,
+    "choices" : [
+        "KQ003380", "KS000030", "KS145990", "KS033920"
+    ],
+
+    "bar_download_limit" : 0
+}
