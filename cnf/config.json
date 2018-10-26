@@ -7,7 +7,6 @@
     "bars_count" : 30,
 
     "commission_percent" : 0.015,
-    "init_caches" : 100.0,
     "choices" : [
         "KQ003380", "KS000030", "KS145990", "KS033920"
     ],

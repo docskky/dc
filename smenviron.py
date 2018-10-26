@@ -16,11 +16,13 @@ class DayAction:
         self.positions = positions
 
 class State:
-    # bars_count : 바라보는 일자수
-    # commission_perc : 결제수수료(%)
     def __init__(self):
         self.bars_count = config.bars_count
         self.commission_percent = config.commission_percent
+        self.own_cash = 0
+        self.own_stocks = None
+        self._prices = None
+        self._offset = None
  
     def reset(self, prices, offset):
         self.own_cash = config.init_caches
@@ -31,7 +33,7 @@ class State:
     @property
     def shape(self):
         # [h, l, c] * bars + position_flag + rel_profit (since open)
-        return (4 * self.bars_count + 1 + 1, )
+        return 4 * self.bars_count + 1 + 1,
 
     def encode(self):
         """
