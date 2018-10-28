@@ -10,7 +10,7 @@ import re
 import glob
 import time
 from cnf.APConfig import config
-from lib.APDatabase import APDatabase as database
+from lib.apdb import APDatabase as database
 
 START_DATE = '2000-01-01'
 LIMIT = config.bar_download_limit

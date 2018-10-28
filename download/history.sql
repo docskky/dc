@@ -39,3 +39,4 @@ select count(*), min(hd.date) as start, stocks.scode, name from stocks left join
 
 # 상장 마지막 시작일 조회
 select max(s_date) from (select min(hd.date) as s_date, hd.scode from history_days hd where hd.scode in ("KQ003380", "KS000030", "KS145990", "KS033920") group by hd.scode) sdates;
+

@@ -2,16 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0b76671a-b94d-4fdc-abe5-cf985e23c3ca" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cnf/APConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnf/APConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cnf/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/cnf/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/download/history.sql" beforeDir="false" afterPath="$PROJECT_DIR$/download/history.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/APDatabase.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/APDatabase.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/remote_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smenviron.py" beforeDir="false" afterPath="$PROJECT_DIR$/smenviron.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/APDatabase.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/apdb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storedb.py" beforeDir="false" afterPath="$PROJECT_DIR$/storedb.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,16 +28,19 @@
     <session id="2081613150">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.0" value="1" />
+          <entry key="project.open.time.10" value="2" />
+          <entry key="project.open.time.420" value="1" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.open.time.7" value="1" />
+          <entry key="project.opened" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="json" value="1" />
-          <entry key="py" value="5" />
+          <entry key="py" value="7" />
           <entry key="sql" value="3" />
         </counts>
       </usages-collector>
@@ -48,20 +48,23 @@
         <counts>
           <entry key="DBN-SQL" value="2" />
           <entry key="JSON" value="1" />
-          <entry key="Python" value="5" />
+          <entry key="Python" value="7" />
           <entry key="SQL" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="214" />
-          <entry key="sql" value="20" />
+          <entry key="dummy" value="4" />
+          <entry key="py" value="818" />
+          <entry key="sql" value="22" />
+          <entry key="txt" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="DBN-SQL" value="20" />
-          <entry key="Python" value="214" />
+          <entry key="DBN-SQL" value="22" />
+          <entry key="PLAIN_TEXT" value="12" />
+          <entry key="Python" value="818" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -69,11 +72,37 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/download/history.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="585">
-              <caret line="39" column="15" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
+            <state relative-caret-position="291">
+              <caret line="23" column="38" lean-forward="true" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/data/data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+                <marker date="1540743116767" expanded="true" signature="200:201" ph="..." />
+                <marker date="1540743116767" expanded="true" signature="200:205" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -81,7 +110,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/smenviron.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="419">
+            <state relative-caret-position="360">
               <caret line="29" column="29" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
@@ -91,10 +120,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/APDatabase.py">
+        <entry file="file://$PROJECT_DIR$/lib/apdb.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+            <state relative-caret-position="600">
+              <caret line="40" column="21" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
@@ -120,7 +149,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="db://6db02e01-135e-4d11-8b2d-14c8caac9dbe/consoles/aitrain">
           <provider selected="true" editor-type-id="0.CONSOLE">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" current-schema="aistocks" session-id="MAIN">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" current-schema="aistocks" session-id="MAIN">
               <folding />
             </state>
           </provider>
@@ -129,7 +158,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/storedb.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="716">
+              <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -149,13 +179,25 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cnf/config.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="28" lean-forward="true" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="28" />
+            <state relative-caret-position="210">
+              <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>fetch</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -166,16 +208,19 @@
         <option value="$PROJECT_DIR$/smenviron.py" />
         <option value="$PROJECT_DIR$/cnf/config.json" />
         <option value="$PROJECT_DIR$/cnf/APConfig.py" />
-        <option value="$PROJECT_DIR$/lib/APDatabase.py" />
         <option value="$PROJECT_DIR$/download/history.sql" />
+        <option value="$PROJECT_DIR$/lib/APDatabase.py" />
+        <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/lib/apdb.py" />
+        <option value="$PROJECT_DIR$/data/data.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="200" />
+    <option name="x" value="107" />
     <option name="y" value="23" />
-    <option name="width" value="1400" />
-    <option name="height" value="940" />
+    <option name="width" value="1410" />
+    <option name="height" value="831" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -200,12 +245,17 @@
             <path>
               <item name="dc" type="b2602c69:ProjectViewProjectNode" />
               <item name="dc" type="462c0819:PsiDirectoryNode" />
-              <item name="download" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dc" type="b2602c69:ProjectViewProjectNode" />
               <item name="dc" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dc" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dc" type="462c0819:PsiDirectoryNode" />
+              <item name="ptan" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dc" type="b2602c69:ProjectViewProjectNode" />
@@ -238,6 +288,34 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="dc" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -249,23 +327,28 @@
       <option name="presentableId" value="Default" />
       <updated>1540564469842</updated>
     </task>
+    <task id="LOCAL-00001" summary="sql 디버그">
+      <created>1540577910985</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1540577910985</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="200" y="23" width="1400" height="940" extended-state="0" />
-    <editor active="true" />
+    <frame x="107" y="23" width="1410" height="831" extended-state="0" />
     <layout>
-      <window_info id="DB Browser" weight="0.32994923" />
-      <window_info id="Project Explorer" weight="0.32994923" />
-      <window_info id="Job Explorer" weight="0.32994923" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24945612" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24766019" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Console" />
-      <window_info anchor="bottom" id="DB Execution Console" />
+      <window_info id="Project Explorer" order="3" weight="0.32994923" />
+      <window_info id="DB Browser" order="4" weight="0.32994923" />
+      <window_info id="Job Explorer" order="5" weight="0.32994923" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32882273" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -274,6 +357,8 @@
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="bottom" id="Console" order="11" />
+      <window_info anchor="bottom" id="DB Execution Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -282,19 +367,27 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="sql 디버그" />
+    <option name="LAST_COMMIT_MESSAGE" value="sql 디버그" />
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cnf/APConfig.py">
+    <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="45">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storedb.py">
+    <entry file="file://$PROJECT_DIR$/smenviron.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="360">
+          <caret line="29" column="29" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -314,42 +407,61 @@
     </entry>
     <entry file="db://6db02e01-135e-4d11-8b2d-14c8caac9dbe/consoles/aitrain">
       <provider selected="true" editor-type-id="0.CONSOLE">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" current-schema="aistocks" session-id="MAIN">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" current-schema="aistocks" session-id="MAIN">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/smenviron.py">
+    <entry file="file://$PROJECT_DIR$/cnf/APConfig.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="419">
-          <caret line="29" column="29" selection-start-line="29" selection-start-column="29" selection-end-line="29" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="345">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/APDatabase.py">
+    <entry file="file://$PROJECT_DIR$/cnf/config.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        <state relative-caret-position="210">
+          <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/download/history.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="23" column="38" lean-forward="true" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/apdb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="40" column="21" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
           <folding>
             <element signature="e#0#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cnf/config.json">
+    <entry file="file://$PROJECT_DIR$/storedb.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="28" lean-forward="true" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="28" />
+        <state relative-caret-position="716">
+          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/download/history.sql">
+    <entry file="file://$PROJECT_DIR$/data/data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="15" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
+        <state relative-caret-position="375">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1540743116767" expanded="true" signature="200:201" ph="..." />
+            <marker date="1540743116767" expanded="true" signature="200:205" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
