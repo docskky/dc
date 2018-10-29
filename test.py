@@ -4,4 +4,4 @@ from cnf.APConfig import config
 prices = data.load_prices(config.choices)
 
 pc = prices[0]
-print("shape"+pc.work.shape)
+print("shape {}".format(pc))

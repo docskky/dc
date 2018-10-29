@@ -68,3 +68,16 @@ def load_prices(scodes):
         price_list.append(prices)
 
     return price_list
+
+
+def prices_to_relative(prices):
+    """
+    Convert prices to relative in respect to open price
+    :param ochl: tuple with open, close, high, low
+    :return: tuple with open, rel_close, rel_high, rel_low
+    """
+    assert isinstance(prices, Prices)
+    rh = (prices.high - prices.open) / prices.open
+    rl = (prices.low - prices.open) / prices.open
+    rc = (prices.close - prices.open) / prices.open
+    return Prices(work=prices.work, open=prices.open, high=rh, low=rl, close=rc, volume=prices.volume)

@@ -21,19 +21,19 @@ class State:
         self.commission_percent = config.commission_percent
         self.own_cash = 0
         self.own_stocks = None
-        self._prices = None
-        self._offset = None
+        self.prices_list = None
+        self.offset = None
  
-    def reset(self, prices, offset):
+    def reset(self, prices_list, offset):
         self.own_cash = config.init_caches
-        self.own_stocks = np.zeros((config.n_choices,), dtype=int)
-        self._prices = prices
-        self._offset = offset
+        self.own_stocks = np.zeros((len(config.choices),), dtype=int)
+        self.prices_list = prices_list
+        self.offset = offset
 
     @property
     def shape(self):
-        # [h, l, c] * bars + position_flag + rel_profit (since open)
-        return 4 * self.bars_count + 1 + 1,
+        # [h, l, c, v] * bars * choices + own_stocks + own_cash
+        return 4 * self.bars_count * len(config.choices) + len(config.choices) + 1 + 1,
 
     def encode(self):
         """
@@ -41,15 +41,17 @@ class State:
         """
         res = np.ndarray(shape=self.shape, dtype=np.float32)
         shift = 0
-        for bar_idx in range(-self.bars_count+1, 1):
-            res[shift] = self._prices.high[self._offset + bar_idx]
-            shift += 1
-            res[shift] = self._prices.low[self._offset + bar_idx]
-            shift += 1
-            res[shift] = self._prices.close[self._offset + bar_idx]
-            shift += 1
-            res[shift] = self._prices.volume[self._offset + bar_idx]
-            shift += 1
+        begin_idx = self.offset-self.bars_count+1
+
+        for stock_idx in range(0, len(self.prices_list)):
+            res[shift] = self.prices_list[stock_idx].high[begin_idx:self.offset+1]
+            shift += self.bars_count
+            res[shift] = self.prices_list[stock_idx].low[begin_idx:self.offset+1]
+            shift += self.bars_count
+            res[shift] = self.prices_list[stock_idx].close[begin_idx:self.offset+1]
+            shift += self.bars_count
+            res[shift] = self.prices_list[stock_idx].volume[begin_idx:self.offset+1]
+            shift += self.bars_count
         res[shift] = float(self.have_position)
         shift += 1
         if not self.have_position:
