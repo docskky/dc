@@ -23,50 +23,48 @@ class State:
         self.own_stocks = None
         self.prices_list = None
         self.offset = None
- 
+        self.days = 0
+
     def reset(self, prices_list, offset):
         self.own_cash = config.init_caches
         self.own_stocks = np.zeros((len(config.choices),), dtype=int)
         self.prices_list = prices_list
         self.offset = offset
+        self.days = 0
+
+    def _total_asset(self):
+        self.own_cash + self.own_stocks.sum()
 
     @property
     def shape(self):
-        # [h, l, c, v] * bars * choices + own_stocks + own_cash
-        return 4 * self.bars_count * len(config.choices) + len(config.choices) + 1 + 1,
+        # choices+1, [h, l, c, v] * bars_count
+        return len(config.choices)+1, 4 * self.bars_count
 
     def encode(self):
         """
         Convert current state into numpy array.
         """
         res = np.ndarray(shape=self.shape, dtype=np.float32)
-        shift = 0
+
         begin_idx = self.offset-self.bars_count+1
+        n_stocks = len(self.prices_list)
+        for stock_idx in range(0, n_stocks):
+            cnt = 0
+            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = self.prices_list[stock_idx].high[begin_idx:self.offset+1]
+            cnt += 1
+            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = self.prices_list[stock_idx].low[begin_idx:self.offset+1]
+            cnt += 1
+            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = self.prices_list[stock_idx].close[begin_idx:self.offset+1]
+            cnt += 1
+            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = self.prices_list[stock_idx].volume[begin_idx:self.offset+1]
 
-        for stock_idx in range(0, len(self.prices_list)):
-            res[shift] = self.prices_list[stock_idx].high[begin_idx:self.offset+1]
-            shift += self.bars_count
-            res[shift] = self.prices_list[stock_idx].low[begin_idx:self.offset+1]
-            shift += self.bars_count
-            res[shift] = self.prices_list[stock_idx].close[begin_idx:self.offset+1]
-            shift += self.bars_count
-            res[shift] = self.prices_list[stock_idx].volume[begin_idx:self.offset+1]
-            shift += self.bars_count
-        res[shift] = float(self.have_position)
-        shift += 1
-        if not self.have_position:
-            res[shift] = 0.0
-        else:
-            res[shift] = (self._cur_close() - self.open_price) / self.open_price
+        res[n_stocks][:] = 0
+        idx = 0
+        res[n_stocks][idx] = self.own_cash
+        idx += 1
+        res[n_stocks][idx:idx+len(self.own_stocks)] = self.own_stocks
+
         return res
-
-    def _cur_close(self):
-        """
-        Calculate real close price for the current bar
-        """
-        open = self._prices.open[self._offset]
-        rel_close = self._prices.close[self._offset]
-        return open * (1.0 + rel_close)
 
     def step(self, action):
         """
@@ -75,7 +73,10 @@ class State:
         :param action:
         :return: reward, done
         """
-        assert isinstance(action, Actions)
+        assert isinstance(action, DayAction)
+
+        prev_asset = self._total_asset()
+
         reward = 0.0
         done = False
         close = self._cur_close()
@@ -83,23 +84,21 @@ class State:
             self.have_position = True
             self.open_price = close
             reward -= self.commission_perc
-        elif action == Actions.Close and self.have_position:
-            reward -= self.commission_perc
-            done |= self.reset_on_close
-            if self.reward_on_close:
-                reward += 100.0 * (close - self.open_price) / self.open_price
-            self.have_position = False
-            self.open_price = 0.0
 
-        self._offset += 1
-        prev_close = close
-        close = self._cur_close()
-        done |= self._offset >= self._prices.close.shape[0]-1
+        self.offset += 1
+        self.days += 1
+
+        if self.days >= config.play_days:
+            done = True
 
         if self.have_position and not self.reward_on_close:
             reward += 100.0 * (close - prev_close) / prev_close
 
+        cur_asset = self._total_asset()
+
+        reward = cur_asset-
         return reward, done
+
 
 
 class State1D(State):

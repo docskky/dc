@@ -11,5 +11,7 @@
         "KQ003380", "KS000030", "KS145990", "KS033920"
     ],
 
+    "play_days" : 30,
+
     "bar_download_limit" : 0
 }
