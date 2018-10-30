@@ -5,15 +5,17 @@ import enum
 import numpy as np
 from cnf.APConfig import config
 
+
 class Action(enum.Enum):
     Idle = 0
     Buy = 1
     Sell = 2
 
+
 class DayAction:
-    def __init__(self, actions, positions):
+    def __init__(self, actions):
         self.actions = actions
-        self.positions = positions
+
 
 class State:
     def __init__(self):
@@ -33,7 +35,7 @@ class State:
         self.days = 0
 
     def _total_asset(self):
-        self.own_cash + self.own_stocks.sum()
+        return self.own_cash + self.own_stocks.sum()
 
     @property
     def shape(self):
@@ -50,13 +52,17 @@ class State:
         n_stocks = len(self.prices_list)
         for stock_idx in range(0, n_stocks):
             cnt = 0
-            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = self.prices_list[stock_idx].high[begin_idx:self.offset+1]
+            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = \
+                self.prices_list[stock_idx].high[begin_idx:self.offset+1]
             cnt += 1
-            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = self.prices_list[stock_idx].low[begin_idx:self.offset+1]
+            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = \
+                self.prices_list[stock_idx].low[begin_idx:self.offset+1]
             cnt += 1
-            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = self.prices_list[stock_idx].close[begin_idx:self.offset+1]
+            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = \
+                self.prices_list[stock_idx].close[begin_idx:self.offset+1]
             cnt += 1
-            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = self.prices_list[stock_idx].volume[begin_idx:self.offset+1]
+            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = \
+                self.prices_list[stock_idx].volume[begin_idx:self.offset+1]
 
         res[n_stocks][:] = 0
         idx = 0
@@ -77,6 +83,8 @@ class State:
 
         prev_asset = self._total_asset()
 
+        self.own_stock = [sum(x) for x in zip(self.own_stocks, action.positions)]
+
         reward = 0.0
         done = False
         close = self._cur_close()
@@ -91,12 +99,9 @@ class State:
         if self.days >= config.play_days:
             done = True
 
-        if self.have_position and not self.reward_on_close:
-            reward += 100.0 * (close - prev_close) / prev_close
-
         cur_asset = self._total_asset()
 
-        reward = cur_asset-
+        reward = cur_asset-prev_asset
         return reward, done
 
 
