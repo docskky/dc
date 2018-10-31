@@ -17,25 +17,68 @@ class DayAction:
         self.actions = actions
 
 
+# 주식과 현금 소유 정보 관리
+# 거래 단위 총합은 len(config.choices)+1 개이고 1개씩 거래할수 있다.
+# amounts, values 리스트의 마지막 항목이 현금이다.
+class Assets:
+    def __init__(self, cache=config.init_caches):
+        n_stocks = len(config.choices)
+        self.amounts = np.zeros((n_stocks+1,), dtype=int)
+        self.values = np.zeros((n_stocks+1,), dtype=float)
+
+        self.set_cache(cache, n_stocks)
+
+    def set_cache(self, cache, amount):
+        self.amounts[-1] = amount
+        self.values[-1] = cache
+
+    def get_cache(self):
+        return self.amounts[-1], self.values[-1]
+
+    def total_value(self):
+        return self.values.sum()
+
+    # 액션을 적용한다.
+    def apply_action(self, action):
+        assert isinstance(action, DayAction)
+
+        # 구매를 먼저 처리한다.
+        for idx, act in action.actions:
+            if Action.Buy == act:
+                assert c_amt > 0
+                c_amt, c_val = self.get_cache()
+                payment = c_val / c_amt
+                self.set_cache(c_amt-1, c_val-payment)
+                # 수수료를 뺀 금액을 주식 가치로 추가
+                self.amounts[idx] += 1
+                self.values[idx] += payment * (1-config.commission_percent)
+
+        for idx, act in action.actions:
+            if Action.Sell == act:
+                assert self.amounts[idx] > 0
+                c_amt, c_val = self.get_cache()
+                payment = self.values[idx] / self.amounts[idx]
+
+                # 수수료를 뺀 금액을 현금으로 추가
+                self.set_cache(c_amt + 1, c_val + payment * (1 - config.commission_percent))
+
+                self.amounts[idx] -= 1
+                self.values[idx] -= payment
+
+
 class State:
     def __init__(self):
         self.bars_count = config.bars_count
-        self.commission_percent = config.commission_percent
-        self.own_cash = 0
-        self.own_stocks = None
+        self.assets = None
         self.prices_list = None
         self.offset = None
-        self.days = 0
+        self.day = 0
 
     def reset(self, prices_list, offset):
-        self.own_cash = config.init_caches
-        self.own_stocks = np.zeros((len(config.choices),), dtype=int)
+        self.assets = Assets()
         self.prices_list = prices_list
         self.offset = offset
-        self.days = 0
-
-    def _total_asset(self):
-        return self.own_cash + self.own_stocks.sum()
+        self.day = 0
 
     @property
     def shape(self):
@@ -66,9 +109,12 @@ class State:
 
         res[n_stocks][:] = 0
         idx = 0
-        res[n_stocks][idx] = self.own_cash
-        idx += 1
-        res[n_stocks][idx:idx+len(self.own_stocks)] = self.own_stocks
+        n_amounts = len(self.assets.amounts)
+        res[n_stocks][idx:idx+n_amounts] = self.assets.amounts
+
+        idx += n_amounts
+        n_values = len(self.assets.values)
+        res[n_stocks][idx:idx+n_values] = self.assets.values
 
         return res
 
@@ -81,17 +127,11 @@ class State:
         """
         assert isinstance(action, DayAction)
 
-        prev_asset = self._total_asset()
-
-        self.own_stock = [sum(x) for x in zip(self.own_stocks, action.positions)]
-
+        prev_asset = self.assets.total_value()
         reward = 0.0
         done = False
-        close = self._cur_close()
-        if action == Actions.Buy and not self.have_position:
-            self.have_position = True
-            self.open_price = close
-            reward -= self.commission_perc
+
+        prices = self.prices_list[self.offset]
 
         self.offset += 1
         self.days += 1
