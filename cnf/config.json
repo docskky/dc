@@ -6,12 +6,34 @@
     "db_name" : "aistocks",
     "bars_count" : 30,
 
-    "commission_percent" : 0.015,
+    "commission_percent" : 0.00015,
     "choices" : [
         "KQ003380", "KS000030", "KS145990", "KS033920"
     ],
 
     "play_days" : 30,
 
-    "bar_download_limit" : 0
+    "bar_download_limit" : 0,
+
+    "cuda" : true,
+    "batch_size" : 32,
+    "target_net_sync" : 1000,
+    "gamma" : 0.99,
+    "replay_size" : 100000,
+    "replay_initial" : 10000,
+
+    "reward_steps" : 2,
+    "learning_rate" : 0.0001,
+    "states_to_evaluate" : 1000,
+    "eval_every_step" : 1000,
+
+    "epsilon_start" : 1.0,
+    "epsilon_stop" : 0.1,
+    "epsilon_steps" : 1000000,
+
+    "checkpoint_every_step" : 1000000,
+    "validation_every_step" : 100000,
+
+    "run_name" : "train_result"
+
 }

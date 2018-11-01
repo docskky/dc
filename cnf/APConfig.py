@@ -23,5 +23,21 @@ class APConfig:
         self.choices = self.env["choices"]
         self.play_days = self.env["play_days"]
 
+        self.cuda = self.env["cuda"]
+        self.batch_size = self.env["batch_size"]
+        self.target_net_sync = self.env["target_net_sync"]
+        self.gamma = self.env["gamma"]
+        self.replay_size = self.env["replay_size"]
+        self.replay_initial = self.env["replay_initial"]
+        self.reward_steps = self.env["reward_steps"]
+        self.learning_rate = self.env["learning_rate"]
+        self.states_to_evaluate = self.env["states_to_evaluate"]
+        self.eval_every_step = self.env["eval_every_step"]
+        self.epsilon_start = self.env["epsilon_start"]
+        self.epsilon_stop = self.env["epsilon_stop"]
+        self.epsilon_steps = self.env["epsilon_steps"]
+        self.checkpoint_every_step = self.env["checkpoint_every_step"]
+        self.validation_every_step = self.env["validation_every_step"]
+        self.run_name = self.env["run_name"]
 
 config = APConfig()

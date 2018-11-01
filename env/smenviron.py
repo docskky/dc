@@ -13,24 +13,37 @@ class Action(enum.Enum):
 
 
 class DayAction:
-    def __init__(self, actions):
-        self.actions = actions
+    def __init__(self, action_index=0):
+        assert isinstance(action_index, int)
+
+        n_stocks = len(config.choices)
+        self.actions = np.zeros(n_stocks, dtype=Action)
+        n_acts = len(Action)
+        x = action_index
+        for idx in range(0, n_stocks):
+            act = x % n_acts
+            self.actions[idx] = Action(act)
+            x = int(x / n_acts)
+
+    @classmethod
+    def action_size(cls):
+        return len(Action) ** len(config.choices)
 
 
 # 주식과 현금 소유 정보 관리
 # 거래 단위 총합은 len(config.choices)+1 개이고 1개씩 거래할수 있다.
 # amounts, values 리스트의 마지막 항목이 현금이다.
 class Assets:
-    def __init__(self, cache=config.init_caches):
+    def __init__(self, cash=100.0):
         n_stocks = len(config.choices)
-        self.amounts = np.zeros((n_stocks+1,), dtype=int)
-        self.values = np.zeros((n_stocks+1,), dtype=float)
+        self.amounts = np.zeros((n_stocks + 1,), dtype=int)
+        self.values = np.zeros((n_stocks + 1,), dtype=float)
 
-        self.set_cache(cache, n_stocks)
+        self.set_cash(cash, n_stocks)
 
-    def set_cache(self, cache, amount):
+    def set_cash(self, cash, amount):
         self.amounts[-1] = amount
-        self.values[-1] = cache
+        self.values[-1] = cash
 
     def get_cache(self):
         return self.amounts[-1], self.values[-1]
@@ -44,18 +57,16 @@ class Assets:
 
         # 구매를 먼저 처리한다.
         for idx, act in action.actions:
-            if Action.Buy == act:
-                assert c_amt > 0
+            if Action.Buy == act and c_amt > 0:
                 c_amt, c_val = self.get_cache()
                 payment = c_val / c_amt
-                self.set_cache(c_amt-1, c_val-payment)
+                self.set_cache(c_amt - 1, c_val - payment)
                 # 수수료를 뺀 금액을 주식 가치로 추가
                 self.amounts[idx] += 1
-                self.values[idx] += payment * (1-config.commission_percent)
+                self.values[idx] += payment * (1 - config.commission_percent)
 
         for idx, act in action.actions:
-            if Action.Sell == act:
-                assert self.amounts[idx] > 0
+            if Action.Sell == act and self.amounts[idx] > 0:
                 c_amt, c_val = self.get_cache()
                 payment = self.values[idx] / self.amounts[idx]
 
@@ -66,12 +77,14 @@ class Assets:
                 self.values[idx] -= payment
 
 
-class State:
+class StateD:
+    offset: int
+
     def __init__(self):
         self.bars_count = config.bars_count
         self.assets = None
         self.prices_list = None
-        self.offset = None
+        self.offset = 0
         self.day = 0
 
     def reset(self, prices_list, offset):
@@ -80,10 +93,15 @@ class State:
         self.offset = offset
         self.day = 0
 
+    def apply_prices(self):
+        n_stocks = len(self.prices_list)
+        for stock_idx in range(0, n_stocks):
+            self.assets.values[stock_idx] *= 1 + self.prices_list[stock_idx].close[self.offset]
+
     @property
     def shape(self):
         # choices+1, [h, l, c, v] * bars_count
-        return len(config.choices)+1, 4 * self.bars_count
+        return len(config.choices) + 1, 4 * self.bars_count
 
     def encode(self):
         """
@@ -91,30 +109,30 @@ class State:
         """
         res = np.ndarray(shape=self.shape, dtype=np.float32)
 
-        begin_idx = self.offset-self.bars_count+1
+        begin_idx = self.offset - self.bars_count + 1
         n_stocks = len(self.prices_list)
         for stock_idx in range(0, n_stocks):
             cnt = 0
-            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = \
-                self.prices_list[stock_idx].high[begin_idx:self.offset+1]
+            res[stock_idx][cnt * self.bars_count:self.bars_count * (cnt + 1)] = \
+                self.prices_list[stock_idx].high[begin_idx:self.offset + 1]
             cnt += 1
-            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = \
-                self.prices_list[stock_idx].low[begin_idx:self.offset+1]
+            res[stock_idx][cnt * self.bars_count:self.bars_count * (cnt + 1)] = \
+                self.prices_list[stock_idx].low[begin_idx:self.offset + 1]
             cnt += 1
-            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = \
-                self.prices_list[stock_idx].close[begin_idx:self.offset+1]
+            res[stock_idx][cnt * self.bars_count:self.bars_count * (cnt + 1)] = \
+                self.prices_list[stock_idx].close[begin_idx:self.offset + 1]
             cnt += 1
-            res[stock_idx][cnt*self.bars_count:self.bars_count*(cnt+1)] = \
-                self.prices_list[stock_idx].volume[begin_idx:self.offset+1]
+            res[stock_idx][cnt * self.bars_count:self.bars_count * (cnt + 1)] = \
+                self.prices_list[stock_idx].volume[begin_idx:self.offset + 1]
 
         res[n_stocks][:] = 0
         idx = 0
         n_amounts = len(self.assets.amounts)
-        res[n_stocks][idx:idx+n_amounts] = self.assets.amounts
+        res[n_stocks][idx:idx + n_amounts] = self.assets.amounts
 
         idx += n_amounts
         n_values = len(self.assets.values)
-        res[n_stocks][idx:idx+n_values] = self.assets.values
+        res[n_stocks][idx:idx + n_values] = self.assets.values
 
         return res
 
@@ -128,10 +146,11 @@ class State:
         assert isinstance(action, DayAction)
 
         prev_asset = self.assets.total_value()
-        reward = 0.0
         done = False
 
-        prices = self.prices_list[self.offset]
+        self.apply_prices()
+
+        self.assets.apply_action(action)
 
         self.offset += 1
         self.days += 1
@@ -139,70 +158,35 @@ class State:
         if self.days >= config.play_days:
             done = True
 
-        cur_asset = self._total_asset()
+        cur_asset = self.assets.total_value()
 
-        reward = cur_asset-prev_asset
+        reward = cur_asset - prev_asset
         return reward, done
-
-
-
-class State1D(State):
-    """
-    State with shape suitable for 1D convolution
-    """
-    @property
-    def shape(self):
-        return (6, self.bars_count)
-    def encode(self):
-        res = np.zeros(shape=self.shape, dtype=np.float32)
-        ofs = self.bars_count-1
-        res[0] = self._prices.high[self._offset-ofs:self._offset+1]
-        res[1] = self._prices.low[self._offset-ofs:self._offset+1]
-        res[2] = self._prices.close[self._offset-ofs:self._offset+1]
-        res[3] = self._prices.volume[self._offset-ofs:self._offset+1]
-        dst = 4
-        if self.have_position:
-            res[dst] = 1.0
-            res[dst+1] = (self._cur_close() - self.open_price) / self.open_price
-        return res
 
 
 class StocksEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, prices, bars_count=DEFAULT_BARS_COUNT,
-                 commission=DEFAULT_COMMISSION_PERC, reset_on_close=True, state_1d=False,
-                 random_ofs_on_reset=True, reward_on_close=False, volumes=False):
-        assert isinstance(prices, dict)
-        self._prices = prices
-        if state_1d:
-            self._state = State1D(bars_count, commission, reset_on_close, reward_on_close=reward_on_close,
-                                  volumes=volumes)
-        else:
-            self._state = State(bars_count, commission, reset_on_close, reward_on_close=reward_on_close,
-                                volumes=volumes)
-        self.action_space = gym.spaces.Discrete(n=len(Actions))
+    def __init__(self, prices_list):
+        self._prices_list = prices_list
+
+        self._state = StateD()
+        self.action_space = gym.spaces.Discrete(n=DayAction.action_size())
         self.observation_space = gym.spaces.Box(low=-np.inf, high=np.inf, shape=self._state.shape, dtype=np.float32)
-        self.random_ofs_on_reset = random_ofs_on_reset
         self.seed()
 
     def reset(self):
         # make selection of the instrument and it's offset. Then reset the state
-        self._instrument = self.np_random.choice(list(self._prices.keys()))
-        prices = self._prices[self._instrument]
-        bars = self._state.bars_count
-        if self.random_ofs_on_reset:
-            offset = self.np_random.choice(prices.high.shape[0]-bars*10) + bars
-        else:
-            offset = bars
-        self._state.reset(prices, offset)
+        bars = config.bars_count
+        offset = self.np_random.choice(self._prices_list[0].high.shape[0] - bars - config.play_days) + bars
+        self._state.reset(self._prices_list, offset)
         return self._state.encode()
 
     def step(self, action_idx):
-        action = Actions(action_idx)
+        action = DayAction(action_idx)
         reward, done = self._state.step(action)
         obs = self._state.encode()
-        info = {"instrument": self._instrument, "offset": self._state._offset}
+        info = {"offset": self._state.offset}
         return obs, reward, done, info
 
     def render(self, mode='human', close=False):
@@ -216,7 +200,7 @@ class StocksEnv(gym.Env):
         seed2 = seeding.hash_seed(seed1 + 1) % 2 ** 31
         return [seed1, seed2]
 
-    @classmethod
-    def from_dir(cls, data_dir, **kwargs):
-        prices = {file: data.load_relative(file) for file in data.price_files(data_dir)}
-        return StocksEnv(prices, **kwargs)
+    #@classmethod
+    #def from_dir(cls, data_dir, **kwargs):
+    #    prices = {file: data.load_relative(file) for file in data.price_files(data_dir)}
+    #    return StocksEnv(prices, **kwargs)
