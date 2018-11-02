@@ -22,7 +22,7 @@ def load_prices(scodes, valid_rate):
     stmt = "select date, open, close, high, low, volume from history_days hd where " \
            "hd.date >= %s and hd.scode =%s order by hd.date;"
 
-    prices_tbl = {}
+    prices_list = []
     next_date = None
     for sc in scodes:
         cursor = db.execute(stmt, (start_date, sc))
@@ -57,21 +57,23 @@ def load_prices(scodes, valid_rate):
             # 다음날을 지정
             next_date = date + datetime.timedelta(days=1)
 
-        prices_tbl.update(sc=
-                          Prices(work=np.array(w, dtype=np.bool_),
-                                 open=np.array(o, dtype=np.float32),
-                                 high=np.array(h, dtype=np.float32),
-                                 low=np.array(l, dtype=np.float32),
-                                 close=np.array(c, dtype=np.float32),
-                                 volume=np.array(v, dtype=np.float32))
-                          )
+        prices = Prices(work=np.array(w, dtype=np.bool_),
+                        open=np.array(o, dtype=np.float32),
+                        high=np.array(h, dtype=np.float32),
+                        low=np.array(l, dtype=np.float32),
+                        close=np.array(c, dtype=np.float32),
+                        volume=np.array(v, dtype=np.float32))
 
-    n_days = prices_tbl[scodes[0]].work.shape[0]
+        # 금액 변동을 비율로 변환
+        prices_list.append(prices_to_relative(prices))
+
+    # 테이블을 2개(훈련, 검증)로 나눈다.
+    n_days = prices_list[scodes[0]].work.shape[0]
     train_days = n_days * (1 - valid_rate)
-    val_prices_tbl = {}
+    val_prices_list = {}
 
     for sc in scodes:
-        prices = prices_tbl[sc]
+        prices = prices_list[sc]
         t_w, v_w = np.split(prices.work, [train_days])
         t_o, v_o = np.split(prices.open, [train_days])
         t_h, v_h = np.split(prices.high, [train_days])
@@ -79,7 +81,7 @@ def load_prices(scodes, valid_rate):
         t_c, v_c = np.split(prices.close, [train_days])
         t_v, v_v = np.split(prices.volume, [train_days])
 
-        prices_tbl.update(sc=
+        prices_list.update(sc=
                           Prices(work=t_w,
                                  open=t_o,
                                  high=t_h,
@@ -87,7 +89,7 @@ def load_prices(scodes, valid_rate):
                                  close=t_c,
                                  volume=t_v)
                           )
-        val_prices_tbl.update(sc=
+        val_prices_list.update(sc=
                               Prices(work=v_w,
                                      open=v_o,
                                      high=v_h,
@@ -95,22 +97,8 @@ def load_prices(scodes, valid_rate):
                                      close=v_c,
                                      volume=v_v)
                               )
-        w = prices.work[:train_days]
-        o = prices.open[:train_days]
-        h = prices.high[:train_days]
-        l = prices.low[:train_days]
-        c = prices.close[:train_days]
-        v = prices.volume[:train_days]
-        prices_tbl.update(sc=
-                          Prices(work=np.array(w, dtype=np.bool_),
-                                 open=np.array(o, dtype=np.float32),
-                                 high=np.array(h, dtype=np.float32),
-                                 low=np.array(l, dtype=np.float32),
-                                 close=np.array(c, dtype=np.float32),
-                                 volume=np.array(v, dtype=np.float32))
-                          )
 
-    return price_list
+    return prices_list, val_prices_list
 
 
 def prices_to_relative(prices):

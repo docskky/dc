@@ -1,4 +1,4 @@
-from env import data as data
+from lib import data as data
 from cnf.APConfig import config
 
 prices = data.load_prices(config.choices, 1)

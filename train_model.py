@@ -1,40 +1,40 @@
 #!/usr/bin/env python3
 import os
-import gym
 import ptan
-import argparse
 import numpy as np
 
 import torch
 import torch.optim as optim
 
 from cnf.APConfig import config
-import env.smenviron as environ
+import lib.smenviron as environ
 
 from tensorboardX import SummaryWriter
 
 if __name__ == "__main__":
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument("--cuda", default=False, action="store_true", help="Enable cuda")
-    #parser.add_argument("--data", default=DEFAULT_STOCKS, help="Stocks file or dir to train on, default=" + DEFAULT_STOCKS)
-    #parser.add_argument("--year", type=int, help="Year to be used for training, if specified, overrides --data option")
-    #parser.add_argument("--valdata", default=DEFAULT_VAL_STOCKS, help="Stocks data for validation, default=" + DEFAULT_VAL_STOCKS)
-    #parser.add_argument("-r", "--run", required=True, help="Run name")
-    #args = parser.parse_args()
+    """
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("--cuda", default=False, action="store_true", help="Enable cuda")
+    # parser.add_argument("--data", default=DEFAULT_STOCKS, help="Stocks file or dir to train on, default=" + DEFAULT_STOCKS)
+    # parser.add_argument("--year", type=int, help="Year to be used for training, if specified, overrides --data option")
+    # parser.add_argument("--valdata", default=DEFAULT_VAL_STOCKS, help="Stocks data for validation, default=" + DEFAULT_VAL_STOCKS)
+    # parser.add_argument("-r", "--run", required=True, help="Run name")
+    # args = parser.parse_args()
+    """
 
     device = torch.device("cuda" if config.cuda else "cpu")
 
     saves_path = os.path.join("saves", config.run_name)
     os.makedirs(saves_path, exist_ok=True)
 
-    prices_list = environ.load_prices(config.choices)
+    prices_list, val_prices_list = env.load_prices(config.choices, 0.3)
 
-    env = gym.wrappers.TimeLimit(env, max_episode_steps=1000)
+    stock_env = environ.StocksEnv(prices_list)
+    val_stock_env = environ.StocksEnv(val_prices_list)
 
-    val_data = {"YNDX": data.load_relative(args.valdata)}
-    env_val = environ.StocksEnv(val_data, bars_count=BARS_COUNT, reset_on_close=True, state_1d=False)
+    #env = gym.wrappers.TimeLimit(env, max_episode_steps=1000)
 
-    writer = SummaryWriter(comment="-simple-" + args.run)
+    writer = SummaryWriter(comment="-simple-" + config.run_name)
     net = models.SimpleFFDQN(env.observation_space.shape[0], env.action_space.n).to(device)
     tgt_net = ptan.agent.TargetNet(net)
     selector = ptan.actions.EpsilonGreedyActionSelector(EPSILON_START)
