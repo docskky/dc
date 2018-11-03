@@ -1,4 +1,4 @@
-from lib.smenviron import DayAction
+from lib.environ import DayAction
 
 action = DayAction(23)
 

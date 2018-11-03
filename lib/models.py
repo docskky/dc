@@ -61,24 +61,24 @@ class DQNConv1D(nn.Module):
         super(DQNConv1D, self).__init__()
 
         self.conv = nn.Sequential(
-            nn.Conv1d(shape[0], 128, 5),
+            nn.Conv1d(shape[0], 256, 5),
             nn.ReLU(),
-            nn.Conv1d(128, 128, 5),
+            nn.Conv1d(256, 256, 5),
             nn.ReLU(),
         )
 
         out_size = self._get_conv_out(shape)
 
         self.fc_val = nn.Sequential(
-            nn.Linear(out_size, 512),
+            nn.Linear(out_size, 1024),
             nn.ReLU(),
-            nn.Linear(512, 1)
+            nn.Linear(1024, 1)
         )
 
         self.fc_adv = nn.Sequential(
-            nn.Linear(out_size, 512),
+            nn.Linear(out_size, 1024),
             nn.ReLU(),
-            nn.Linear(512, actions_n)
+            nn.Linear(1024, actions_n)
         )
 
     def _get_conv_out(self, shape):
