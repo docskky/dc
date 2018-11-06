@@ -12,6 +12,7 @@ import lib.models as models
 import lib.data as data
 import lib.common as common
 import lib.validation as validation
+import datetime
 
 from tensorboardX import SummaryWriter
 
@@ -38,7 +39,7 @@ if __name__ == "__main__":
 
     # env = gym.wrappers.TimeLimit(env, max_episode_steps=1000)
 
-    writer = SummaryWriter(comment="-simple-" + config.run_name)
+    writer = SummaryWriter(comment=config.run_name+datetime.date.today())
     net = models.DQNConv1D(stock_env.observation_space.shape[0], stock_env.action_space.n).to(device)
     print(net)
 
