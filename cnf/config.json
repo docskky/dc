@@ -15,7 +15,7 @@
 
     "bar_download_limit" : 0,
 
-    "cuda" : true,
+    "cuda" : false,
     "batch_size" : 32,
     "target_net_sync" : 1000,
     "gamma" : 0.99,

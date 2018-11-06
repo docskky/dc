@@ -6,8 +6,10 @@ import numpy as np
 Prices = collections.namedtuple('Prices', field_names=['work', 'open', 'high', 'low', 'close', 'volume'])
 
 
-#
-def load_prices(scodes, valid_rate):
+# valid_rate: validation 데이터 비율, 0이면 training 데이터와 동일
+def load_prices(scodes, valid_rate=0):
+#    assert (isinstance(scodes, []))
+
     db = apdb()
     db.connect()
 
@@ -68,35 +70,34 @@ def load_prices(scodes, valid_rate):
         prices_list.append(prices_to_relative(prices))
 
     # 테이블을 2개(훈련, 검증)로 나눈다.
-    n_days = prices_list[scodes[0]].work.shape[0]
-    train_days = n_days * (1 - valid_rate)
-    val_prices_list = {}
+    n_days = prices_list[0].work.shape[0]
+    train_days = int(n_days * (1 - valid_rate))
+    val_prices_list = []
 
-    for sc in scodes:
-        prices = prices_list[sc]
-        t_w, v_w = np.split(prices.work, [train_days])
-        t_o, v_o = np.split(prices.open, [train_days])
-        t_h, v_h = np.split(prices.high, [train_days])
-        t_l, v_l = np.split(prices.low, [train_days])
-        t_c, v_c = np.split(prices.close, [train_days])
-        t_v, v_v = np.split(prices.volume, [train_days])
+    if train_days == n_days:
+        val_prices_list = prices_list
+    else:
+        for idx in range(0, len(scodes)):
+            prices = prices_list[idx]
+            t_w, v_w = np.split(prices.work, [train_days])
+            t_o, v_o = np.split(prices.open, [train_days])
+            t_h, v_h = np.split(prices.high, [train_days])
+            t_l, v_l = np.split(prices.low, [train_days])
+            t_c, v_c = np.split(prices.close, [train_days])
+            t_v, v_v = np.split(prices.volume, [train_days])
 
-        prices_list.update(sc=
-                          Prices(work=t_w,
-                                 open=t_o,
-                                 high=t_h,
-                                 low=t_l,
-                                 close=t_c,
-                                 volume=t_v)
-                          )
-        val_prices_list.update(sc=
-                              Prices(work=v_w,
-                                     open=v_o,
-                                     high=v_h,
-                                     low=v_l,
-                                     close=v_c,
-                                     volume=v_v)
-                              )
+            prices_list[idx] = Prices(work=t_w,
+                                  open=t_o,
+                                  high=t_h,
+                                  low=t_l,
+                                  close=t_c,
+                                  volume=t_v)
+            val_prices_list.append(Prices(work=v_w,
+                                      open=v_o,
+                                      high=v_h,
+                                      low=v_l,
+                                      close=v_c,
+                                      volume=v_v))
 
     return prices_list, val_prices_list
 

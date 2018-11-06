@@ -14,7 +14,7 @@ class Action(enum.Enum):
 
 class DayAction:
     def __init__(self, action_index=0):
-        assert isinstance(action_index, int)
+        assert isinstance(action_index, np.integer)
 
         n_stocks = len(config.choices)
         self.actions = np.zeros(n_stocks, dtype=Action)
@@ -45,7 +45,7 @@ class Assets:
         self.amounts[-1] = amount
         self.values[-1] = cash
 
-    def get_cache(self):
+    def get_cash(self):
         return self.amounts[-1], self.values[-1]
 
     def total_value(self):
@@ -56,22 +56,22 @@ class Assets:
         assert isinstance(action, DayAction)
 
         # 구매를 먼저 처리한다.
-        for idx, act in action.actions:
+        for idx, act in enumerate(action.actions):
+            c_amt, c_val = self.get_cash()
             if Action.Buy == act and c_amt > 0:
-                c_amt, c_val = self.get_cache()
                 payment = c_val / c_amt
-                self.set_cache(c_amt - 1, c_val - payment)
+                self.set_cash(c_val - payment, c_amt - 1)
                 # 수수료를 뺀 금액을 주식 가치로 추가
                 self.amounts[idx] += 1
                 self.values[idx] += payment * (1 - config.commission_percent)
 
-        for idx, act in action.actions:
+        for idx, act in enumerate(action.actions):
+            c_amt, c_val = self.get_cash()
             if Action.Sell == act and self.amounts[idx] > 0:
-                c_amt, c_val = self.get_cache()
                 payment = self.values[idx] / self.amounts[idx]
 
                 # 수수료를 뺀 금액을 현금으로 추가
-                self.set_cache(c_amt + 1, c_val + payment * (1 - config.commission_percent))
+                self.set_cash(c_val + payment * (1 - config.commission_percent), c_amt + 1)
 
                 self.amounts[idx] -= 1
                 self.values[idx] -= payment
@@ -85,13 +85,13 @@ class StateD:
         self.assets = None
         self.prices_list = None
         self.offset = 0
-        self.day = 0
+        self.days = 0
 
     def reset(self, prices_list, offset):
         self.assets = Assets()
         self.prices_list = prices_list
         self.offset = offset
-        self.day = 0
+        self.days = 0
 
     def apply_prices(self):
         n_stocks = len(self.prices_list)
@@ -152,15 +152,21 @@ class StateD:
 
         self.assets.apply_action(action)
 
+        cur_asset = self.assets.total_value()
+
+        competetion_reward = 0.0
+        n_stocks = len(self.prices_list)
+        for idx in range(0, n_stocks):
+            prices = self.prices_list[idx]
+            competetion_reward += prices.close[self.offset]
+        reward = (cur_asset - prev_asset) - competetion_reward
+
         self.offset += 1
         self.days += 1
 
         if self.days >= config.play_days:
             done = True
 
-        cur_asset = self.assets.total_value()
-
-        reward = cur_asset - prev_asset
         return reward, done
 
 

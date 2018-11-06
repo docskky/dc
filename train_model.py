@@ -12,22 +12,23 @@ import lib.models as models
 import lib.data as data
 import lib.common as common
 import lib.validation as validation
-import datetime
+import argparse
+#import datetime
 
 from tensorboardX import SummaryWriter
 
 if __name__ == "__main__":
-    """
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("--cuda", default=False, action="store_true", help="Enable cuda")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cuda", default=False, action="store_true", help="Enable cuda")
+    parser.add_argument("-r", "--run", default=config.run_name, help="Run name")
     # parser.add_argument("--data", default=DEFAULT_STOCKS, help="Stocks file or dir to train on, default=" + DEFAULT_STOCKS)
     # parser.add_argument("--year", type=int, help="Year to be used for training, if specified, overrides --data option")
     # parser.add_argument("--valdata", default=DEFAULT_VAL_STOCKS, help="Stocks data for validation, default=" + DEFAULT_VAL_STOCKS)
-    # parser.add_argument("-r", "--run", required=True, help="Run name")
-    # args = parser.parse_args()
-    """
+    args = parser.parse_args()
 
-    device = torch.device("cuda" if config.cuda else "cpu")
+
+    device = torch.device("cuda" if args.cuda else "cpu")
 
     saves_path = os.path.join("saves", config.run_name)
     os.makedirs(saves_path, exist_ok=True)
@@ -39,8 +40,8 @@ if __name__ == "__main__":
 
     # env = gym.wrappers.TimeLimit(env, max_episode_steps=1000)
 
-    writer = SummaryWriter(comment=config.run_name+datetime.date.today())
-    net = models.DQNConv1D(stock_env.observation_space.shape[0], stock_env.action_space.n).to(device)
+    writer = SummaryWriter(comment=config.run_name)
+    net = models.DQNConv1D(stock_env.observation_space.shape, stock_env.action_space.n).to(device)
     print(net)
 
     tgt_net = ptan.agent.TargetNet(net)
@@ -98,9 +99,9 @@ if __name__ == "__main__":
                 torch.save(net.state_dict(), os.path.join(saves_path, "checkpoint-%3d.data" % idx))
 
             if step_idx % config.validation_every_step == 0:
-                res = validation.validation_run(env_tst, net, device=device)
+                res = validation.validation_run(stock_env, net, device=device)
                 for key, val in res.items():
                     writer.add_scalar(key + "_test", val, step_idx)
-                res = validation.validation_run(env_val, net, device=device)
+                res = validation.validation_run(val_stock_env, net, device=device)
                 for key, val in res.items():
                     writer.add_scalar(key + "_val", val, step_idx)
