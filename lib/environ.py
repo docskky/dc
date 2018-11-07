@@ -101,7 +101,8 @@ class StateD:
     @property
     def shape(self):
         # choices+1, [h, l, c, v] * bars_count
-        return len(config.choices) + 1, 4 * self.bars_count
+        n_stocks = len(config.choices)
+        return n_stocks * 4 + (n_stocks+1) * 2, self.bars_count
 
     def encode(self):
         """
@@ -112,27 +113,22 @@ class StateD:
         begin_idx = self.offset - self.bars_count + 1
         n_stocks = len(self.prices_list)
         for stock_idx in range(0, n_stocks):
-            cnt = 0
-            res[stock_idx][cnt * self.bars_count:self.bars_count * (cnt + 1)] = \
-                self.prices_list[stock_idx].high[begin_idx:self.offset + 1]
-            cnt += 1
-            res[stock_idx][cnt * self.bars_count:self.bars_count * (cnt + 1)] = \
-                self.prices_list[stock_idx].low[begin_idx:self.offset + 1]
-            cnt += 1
-            res[stock_idx][cnt * self.bars_count:self.bars_count * (cnt + 1)] = \
-                self.prices_list[stock_idx].close[begin_idx:self.offset + 1]
-            cnt += 1
-            res[stock_idx][cnt * self.bars_count:self.bars_count * (cnt + 1)] = \
-                self.prices_list[stock_idx].volume[begin_idx:self.offset + 1]
+            idx = stock_idx * 4
+            res[idx] = self.prices_list[stock_idx].high[begin_idx:self.offset + 1]
+            res[idx+1] = self.prices_list[stock_idx].low[begin_idx:self.offset + 1]
+            res[idx+2] = self.prices_list[stock_idx].close[begin_idx:self.offset + 1]
+            res[idx+3] = self.prices_list[stock_idx].volume[begin_idx:self.offset + 1]
 
-        res[n_stocks][:] = 0
-        idx = 0
+        s = n_stocks * 4
+
         n_amounts = len(self.assets.amounts)
-        res[n_stocks][idx:idx + n_amounts] = self.assets.amounts
+        for i in range(0, n_amounts):
+            res[s+i] = self.assets.amounts[i]
 
-        idx += n_amounts
-        n_values = len(self.assets.values)
-        res[n_stocks][idx:idx + n_values] = self.assets.values
+        s += n_amounts
+
+        for i in range(0, n_amounts):
+            res[s+i] = self.assets.values[i]
 
         return res
 

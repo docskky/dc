@@ -112,4 +112,5 @@ def prices_to_relative(prices):
     rh = (prices.high - prices.open) / prices.open
     rl = (prices.low - prices.open) / prices.open
     rc = (prices.close - prices.open) / prices.open
-    return Prices(work=prices.work, open=prices.open, high=rh, low=rl, close=rc, volume=prices.volume)
+    rv = prices.volume / prices.open
+    return Prices(work=prices.work, open=prices.open, high=rh, low=rl, close=rc, volume=rv)

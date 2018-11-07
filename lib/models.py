@@ -92,6 +92,46 @@ class DQNConv1D(nn.Module):
         return val + adv - adv.mean()
 
 
+# 마직 열은 Linear 로 바로 연결한다.
+class DQNConv1DLastLinear(nn.Module):
+    def __init__(self, shape, actions_n):
+        super(DQNConv1DLastLinear, self).__init__()
+
+        shape[0] -= 1
+        kernel_size = shape[0]
+
+        self.conv = nn.Sequential(
+            nn.Conv1d(kernel_size, 256, kernel_size),
+            nn.ReLU(),
+            nn.Conv1d(256, 256, kernel_size),
+            nn.ReLU(),
+        )
+
+        out_size = self._get_conv_out(shape)
+
+        self.fc_val = nn.Sequential(
+            nn.Linear(out_size, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 1)
+        )
+
+        self.fc_adv = nn.Sequential(
+            nn.Linear(out_size, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, actions_n)
+        )
+
+    def _get_conv_out(self, shape):
+        o = self.conv(torch.zeros(1, *shape))
+        return int(np.prod(o.size()))
+
+    def forward(self, x):
+        conv_out = self.conv(x[:-1]).view(x.size()[0]-1, -1)
+
+        val = self.fc_val(conv_out)
+        adv = self.fc_adv(conv_out)
+        return val + adv - adv.mean()
+
 class DQNConv1DLarge(nn.Module):
     def __init__(self, shape, actions_n):
         super(DQNConv1DLarge, self).__init__()
