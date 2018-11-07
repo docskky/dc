@@ -1,21 +1,21 @@
 {
-    "version" : "0.1",
+    "version" : "1.0",
+    "desc" : "n개의 종목에 대해 3 ** n 가지 액션을 취할수 있도록 했다. ",
     "db_host" : "localhost",
     "db_user" : "ai",
     "db_pw" : "ajuRi5@9",
     "db_name" : "aistocks",
     "bars_count" : 30,
 
-    "commission_percent" : 0.00015,
+    "commission_rate" : 0.00015,
     "choices" : [
         "KQ003380", "KS000030", "KS145990", "KS033920"
     ],
 
-    "play_days" : 30,
+    "play_days" : 15,
 
     "bar_download_limit" : 0,
 
-    "cuda" : false,
     "batch_size" : 32,
     "target_net_sync" : 1000,
     "gamma" : 0.99,

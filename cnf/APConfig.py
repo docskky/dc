@@ -2,7 +2,7 @@ import json
 
 
 # bars_count : 바라보는 일자수
-# commission_perc : 결제수수료(%)
+# commission_rate : 결제수수료 비율
 
 class APConfig:
     env = None
@@ -17,13 +17,12 @@ class APConfig:
         self.db_pw = self.env["db_pw"]
         self.db_name = self.env["db_name"]
         self.bars_count = self.env["bars_count"]
-        self.commission_percent = self.env["commission_percent"]
+        self.commission_rate = self.env["commission_rate"]
 
         self.bar_download_limit = self.env["bar_download_limit"]
         self.choices = self.env["choices"]
         self.play_days = self.env["play_days"]
 
-        self.cuda = self.env["cuda"]
         self.batch_size = self.env["batch_size"]
         self.target_net_sync = self.env["target_net_sync"]
         self.gamma = self.env["gamma"]

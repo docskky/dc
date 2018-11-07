@@ -14,7 +14,7 @@ class Action(enum.Enum):
 
 class DayAction:
     def __init__(self, action_index=0):
-        assert isinstance(action_index, np.integer)
+        action_index = int(action_index)
 
         n_stocks = len(config.choices)
         self.actions = np.zeros(n_stocks, dtype=Action)
@@ -63,7 +63,7 @@ class Assets:
                 self.set_cash(c_val - payment, c_amt - 1)
                 # 수수료를 뺀 금액을 주식 가치로 추가
                 self.amounts[idx] += 1
-                self.values[idx] += payment * (1 - config.commission_percent)
+                self.values[idx] += payment * (1 - config.commission_rate)
 
         for idx, act in enumerate(action.actions):
             c_amt, c_val = self.get_cash()
@@ -71,7 +71,7 @@ class Assets:
                 payment = self.values[idx] / self.amounts[idx]
 
                 # 수수료를 뺀 금액을 현금으로 추가
-                self.set_cash(c_val + payment * (1 - config.commission_percent), c_amt + 1)
+                self.set_cash(c_val + payment * (1 - config.commission_rate), c_amt + 1)
 
                 self.amounts[idx] -= 1
                 self.values[idx] -= payment
@@ -145,20 +145,31 @@ class StateD:
         """
         assert isinstance(action, DayAction)
 
+        n_stocks = len(self.prices_list)
+
+        # 액션을 취하기 전의 가치
         prev_asset = self.assets.total_value()
+
         done = False
 
-        self.apply_prices()
+        # 휴일에 대한 액션은 취하지 않게 한다.
+        for idx in range(0, n_stocks):
+            if not self.prices_list[idx].work[self.offset]:
+                action.actions[idx] = Action.Idle
 
         self.assets.apply_action(action)
 
+        self.apply_prices()
+
+        # 액션을 취하고, 금일 주가 변동액이 반영된 후의 가치
         cur_asset = self.assets.total_value()
 
         competetion_reward = 0.0
-        n_stocks = len(self.prices_list)
+        first_day = self.offset-self.days
         for idx in range(0, n_stocks):
             prices = self.prices_list[idx]
-            competetion_reward += prices.close[self.offset]
+            # 그동안 변동 비율에 오늘 일자의 변동 비율을 곱한다.
+            competetion_reward += ((prices.open[self.offset]-prices.open[first_day])/prices.open[first_day]) * prices.close[self.offset] * 100.0 / n_stocks
         reward = (cur_asset - prev_asset) - competetion_reward
 
         self.offset += 1
@@ -192,7 +203,10 @@ class StocksEnv(gym.Env):
         action = DayAction(action_idx)
         reward, done = self._state.step(action)
         obs = self._state.encode()
-        info = {"offset": self._state.offset}
+        info = {
+            "offset": self._state.offset,
+            "profit": self._state.assets.total_value() - 100
+            }
         return obs, reward, done, info
 
     def render(self, mode='human', close=False):
