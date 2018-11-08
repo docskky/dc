@@ -9,13 +9,14 @@
     "commission_rate" : 0.00015,
     "sale_tax_rate" : 0.003,
 
-    "choices" : [
-        "KQ003380", "KS000030", "KS145990", "KS033920"
-    ],
-
     "single_phase" : {
-        "bars_count" : 60,
-        "play_days" : 30,
+
+        "choices" : [
+            "KQ003380", "KS000030", "KS145990", "KS033920"
+        ],
+        "normal_bars_count" : 30,
+        "long_bars_count" : 30,
+        "play_days" : 60,
         "max_play_days" : 180,
 
         "bar_download_limit" : 0,
@@ -42,6 +43,9 @@
     },
 
     "multi_phase" : {
+        "choices" : [
+            "KQ003380", "KS000030", "KS145990", "KS033920"
+        ],
         "bars_count" : 60,
         "play_days" : 30,
         "max_play_days" : 180,

@@ -1,5 +1,5 @@
 import mysql.connector as mariadb
-from cnf.APConfig import config
+from cnf.APConfig import sconfig
 
 
 class APDatabase(object):
@@ -9,10 +9,10 @@ class APDatabase(object):
 
     def connect(self):
         self._db = mariadb.connect(
-            host=config.db_host,
-            user=config.db_user,
-            passwd=config.db_pw,
-            db=config.db_name,
+            host=sconfig.db_host,
+            user=sconfig.db_user,
+            passwd=sconfig.db_pw,
+            db=sconfig.db_name,
             use_pure=True)
         return self._db
 

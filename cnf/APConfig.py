@@ -7,40 +7,84 @@ import json
 class APConfig:
     env = None
 
-    def __init__(self, phase):
+    def __init__(self):
         with open('./cnf/config.json') as file:
             self.env = json.load(file)
+
         assert (self.env is not None)
+
         self.version = self.env["version"]
         self.db_host = self.env["db_host"]
         self.db_user = self.env["db_user"]
         self.db_pw = self.env["db_pw"]
         self.db_name = self.env["db_name"]
-        self.bars_count = self.env["bars_count"]
         self.commission_rate = self.env["commission_rate"]
         self.sale_tax_rate = self.env["sale_tax_rate"]
 
-        self.bar_download_limit = self.env["bar_download_limit"]
-        self.choices = self.env["choices"]
-        self.play_days = self.env["play_days"]
 
-        self.batch_size = self.env["batch_size"]
-        self.target_net_sync = self.env["target_net_sync"]
-        self.gamma = self.env["gamma"]
-        self.replay_size = self.env["replay_size"]
-        self.replay_initial = self.env["replay_initial"]
-        self.reward_steps = self.env["reward_steps"]
-        self.learning_rate = self.env["learning_rate"]
-        self.states_to_evaluate = self.env["states_to_evaluate"]
-        self.eval_every_step = self.env["eval_every_step"]
-        self.epsilon_start = self.env["epsilon_start"]
-        self.epsilon_stop = self.env["epsilon_stop"]
-        self.epsilon_steps = self.env["epsilon_steps"]
-        self.checkpoint_every_step = self.env["checkpoint_every_step"]
-        self.validation_every_step = self.env["validation_every_step"]
-        self.run_name = self.env["run_name"]
+class SinglePhaseConfig(APConfig):
+    def __init__(self):
+        super(SinglePhaseConfig, self).__init__()
 
-        self.max_play_days = self.env["max_play_days"]
+        penv = self.env["single_phase"]
+        assert (penv is not None)
+
+        self.normal_bars_count = penv["normal_bars_count"]
+        self.long_bars_count = penv["long_bars_count"]
+        self.bar_download_limit = penv["bar_download_limit"]
+        self.choices = penv["choices"]
+        self.play_days = penv["play_days"]
+
+        self.batch_size = penv["batch_size"]
+        self.target_net_sync = penv["target_net_sync"]
+        self.gamma = penv["gamma"]
+        self.replay_size = penv["replay_size"]
+        self.replay_initial = penv["replay_initial"]
+        self.reward_steps = penv["reward_steps"]
+        self.learning_rate = penv["learning_rate"]
+        self.states_to_evaluate = penv["states_to_evaluate"]
+        self.eval_every_step = penv["eval_every_step"]
+        self.epsilon_start = penv["epsilon_start"]
+        self.epsilon_stop = penv["epsilon_stop"]
+        self.epsilon_steps = penv["epsilon_steps"]
+        self.checkpoint_every_step = penv["checkpoint_every_step"]
+        self.validation_every_step = penv["validation_every_step"]
+        self.run_name = penv["run_name"]
+
+        self.max_play_days = penv["max_play_days"]
 
 
-config = APConfig()
+class MultiPhaseConfig(APConfig):
+    def __init__(self):
+        super(MultiPhaseConfig, self).__init__()
+
+        penv = self.env["multi_phase"]
+        assert (penv is not None)
+
+        self.bars_count = penv["bars_count"]
+        self.bar_download_limit = penv["bar_download_limit"]
+        self.choices = penv["choices"]
+        self.play_days = penv["play_days"]
+
+        self.batch_size = penv["batch_size"]
+        self.target_net_sync = penv["target_net_sync"]
+        self.gamma = penv["gamma"]
+        self.replay_size = penv["replay_size"]
+        self.replay_initial = penv["replay_initial"]
+        self.reward_steps = penv["reward_steps"]
+        self.learning_rate = penv["learning_rate"]
+        self.states_to_evaluate = penv["states_to_evaluate"]
+        self.eval_every_step = penv["eval_every_step"]
+        self.epsilon_start = penv["epsilon_start"]
+        self.epsilon_stop = penv["epsilon_stop"]
+        self.epsilon_steps = penv["epsilon_steps"]
+        self.checkpoint_every_step = penv["checkpoint_every_step"]
+        self.validation_every_step = penv["validation_every_step"]
+        self.run_name = penv["run_name"]
+
+        self.max_play_days = penv["max_play_days"]
+
+
+sconfig = SinglePhaseConfig()
+
+mconfig = SinglePhaseConfig()
