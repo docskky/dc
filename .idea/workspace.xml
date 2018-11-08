@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0b76671a-b94d-4fdc-abe5-cf985e23c3ca" name="Default Changelist" comment="n개의 종목에 3 ** n 가지 액션을 취한다.&#10;convolusion">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="0b76671a-b94d-4fdc-abe5-cf985e23c3ca" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/cnf/APConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/cnf/APConfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cnf/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/cnf/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/apdb.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/apdb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/environ.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/environ.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_single_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_single_model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +72,7 @@
     <session id="-1703991486">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="9" />
+          <entry key="project.closed" value="10" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.20" value="2" />
           <entry key="project.open.time.28" value="1" />
@@ -81,28 +86,28 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="json" value="467" />
-          <entry key="py" value="5172" />
-          <entry key="txt" value="67" />
+          <entry key="json" value="665" />
+          <entry key="py" value="6899" />
+          <entry key="txt" value="74" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JSON" value="467" />
-          <entry key="PLAIN_TEXT" value="67" />
-          <entry key="Python" value="5172" />
+          <entry key="JSON" value="665" />
+          <entry key="PLAIN_TEXT" value="74" />
+          <entry key="Python" value="6899" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="json" value="2" />
-          <entry key="py" value="20" />
+          <entry key="py" value="25" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JSON" value="2" />
-          <entry key="Python" value="20" />
+          <entry key="Python" value="25" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -117,8 +122,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1695">
-              <caret line="116" selection-start-line="116" selection-end-line="116" />
+            <state relative-caret-position="-299">
+              <caret line="38" column="40" selection-start-line="38" selection-start-column="40" selection-end-line="38" selection-end-column="40" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
                 <marker date="1541579825675" expanded="true" signature="201:257" ph="..." />
@@ -130,8 +135,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1365">
-              <caret line="107" selection-start-line="107" selection-end-line="107" />
+            <state relative-caret-position="844">
+              <caret line="67" selection-start-line="67" selection-end-line="67" />
               <folding>
                 <element signature="e#23#32#0" expanded="true" />
               </folding>
@@ -140,10 +145,25 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ptan/common/utils.py">
+        <entry file="file://$PROJECT_DIR$/train_single_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5430">
-              <caret line="370" selection-start-line="370" selection-end-line="370" />
+            <state relative-caret-position="611">
+              <caret line="101" selection-start-line="101" selection-end-line="101" />
+              <folding>
+                <element signature="e#23#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/apdb.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#33#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -151,17 +171,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cnf/config.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cnf/config.json.bak.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" selection-start-line="10" selection-end-line="11" />
+            <state relative-caret-position="476">
+              <caret line="48" selection-start-line="48" selection-end-line="48" />
             </state>
           </provider>
         </entry>
@@ -169,33 +180,41 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cnf/APConfig.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="28" selection-start-line="4" selection-start-column="28" selection-end-line="4" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/environ.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2550">
-              <caret line="175" selection-start-line="175" selection-end-line="175" />
+            <state relative-caret-position="583">
+              <caret line="90" selection-start-line="90" selection-end-line="90" />
               <folding>
-                <element signature="e#0#10#0" expanded="true" />
-                <marker date="1541591375493" expanded="true" signature="796:2218" ph="..." />
-                <marker date="1541591375493" expanded="true" signature="1210:1215" ph="..." />
-                <marker date="1541591375493" expanded="true" signature="1272:1276" ph="..." />
-                <marker date="1541591375493" expanded="true" signature="6300:6305" ph="..." />
+                <marker date="1541676473455" expanded="true" signature="612:1852" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lib/environ.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="362">
+              <caret line="297" column="9" selection-start-line="297" selection-start-column="9" selection-end-line="297" selection-end-column="9" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/validation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+            <state relative-caret-position="495">
+              <caret line="33" column="60" selection-start-line="33" selection-start-column="60" selection-end-line="33" selection-end-column="60" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -204,22 +223,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/common.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="38" column="32" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="870">
-              <caret line="63" column="37" selection-start-line="63" selection-start-column="37" selection-end-line="63" selection-end-column="37" />
+            <state relative-caret-position="855">
+              <caret line="60" column="41" selection-start-line="60" selection-start-column="41" selection-end-line="60" selection-end-column="41" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -238,15 +245,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>default_states_preprocessor</find>
-      <find>unpack_batch</find>
-      <find>calc_loss</find>
-      <find>ExperienceReplayBuffer</find>
-      <find>experience_source_iter</find>
-      <find>ExperienceSourceFirstLast</find>
-      <find>next_state</find>
-      <find>total_rewards</find>
-      <find>pop_total_rewards</find>
       <find>days</find>
       <find>c_amt</find>
       <find>cache</find>
@@ -268,6 +266,15 @@
       <find>validation_every_step</find>
       <find>epsilon</find>
       <find>prices_to_relative</find>
+      <find>reset()</find>
+      <find>reset</find>
+      <find>seed</find>
+      <find>seed(</find>
+      <find>bars_count</find>
+      <find>self.bars_count</find>
+      <find>replay_initial</find>
+      <find>self.bars_c</find>
+      <find>open_price =</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -288,22 +295,23 @@
         <option value="$PROJECT_DIR$/smenviron.py" />
         <option value="$PROJECT_DIR$/download/history.sql" />
         <option value="$PROJECT_DIR$/lib/APDatabase.py" />
-        <option value="$PROJECT_DIR$/lib/apdb.py" />
         <option value="$PROJECT_DIR$/data/data.py" />
         <option value="$PROJECT_DIR$/test_smenviron.py" />
         <option value="$PROJECT_DIR$/env/smenviron.py" />
-        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/env/data.py" />
         <option value="$PROJECT_DIR$/env/models.py" />
         <option value="$PROJECT_DIR$/ptan/experience.py" />
         <option value="$PROJECT_DIR$/ptan/agent.py" />
         <option value="$PROJECT_DIR$/cnf/config.json.bak.json" />
-        <option value="$PROJECT_DIR$/cnf/APConfig.py" />
-        <option value="$PROJECT_DIR$/train_model.py" />
-        <option value="$PROJECT_DIR$/lib/validation.py" />
-        <option value="$PROJECT_DIR$/cnf/config.json" />
         <option value="$PROJECT_DIR$/lib/data.py" />
         <option value="$PROJECT_DIR$/lib/models.py" />
+        <option value="$PROJECT_DIR$/train_model.py" />
+        <option value="$PROJECT_DIR$/lib/validation.py" />
+        <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/cnf/APConfig.py" />
+        <option value="$PROJECT_DIR$/cnf/config.json" />
+        <option value="$PROJECT_DIR$/train_single_model.py" />
+        <option value="$PROJECT_DIR$/lib/apdb.py" />
         <option value="$PROJECT_DIR$/lib/environ.py" />
       </list>
     </option>
@@ -384,7 +392,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.train_model">
+  <component name="RunManager" selected="Python.train_single_model">
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="dc" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -448,15 +456,38 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="train_single_model" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="dc" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train_single_model.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.test" />
       <item itemvalue="Python.test_smenviron" />
       <item itemvalue="Python.train_model" />
+      <item itemvalue="Python.train_single_model" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.train_model" />
+        <item itemvalue="Python.train_single_model" />
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.train_model" />
         <item itemvalue="Python.test_smenviron" />
       </list>
     </recent_temporary>
@@ -549,7 +580,21 @@
       <option name="project" value="LOCAL" />
       <updated>1541599655141</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="n개의 종목에 3 ** n 가지 액션을 취한다.&#10;convolusion">
+      <created>1541638188029</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1541638188029</updated>
+    </task>
+    <task id="LOCAL-00013" summary="설정&#10;1. 하나의 주식에 대해 구매-판매 한번씩 이루어지는 것을 하나의 에피소드로 설정 &#10;2. 60일동안의 히스트리를 관찰&#10;3. simple linear 모델 적용&#10;&#10;실행 커맨드 &#10;$ python train_single_model.py --cuda &gt;&amp; test">
+      <created>1541663703907</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1541663703907</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TodoView">
@@ -565,7 +610,7 @@
     <frame x="29" y="23" width="1807" height="977" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21668532" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21668532" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Project Explorer" order="3" weight="0.32994923" />
@@ -573,12 +618,12 @@
       <window_info id="Job Explorer" order="5" weight="0.32994923" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.22033899" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.17062147" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.37853107" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.5887006" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3299435" />
-      <window_info anchor="bottom" id="Version Control" order="7" visible="true" weight="0.19774011" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.19774011" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.3299435" />
@@ -598,10 +643,18 @@
     <MESSAGE value="train_model.py 수정" />
     <MESSAGE value="n개의 종목에 3 ** n 가지 액션을 취한다." />
     <MESSAGE value="n개의 종목에 3 ** n 가지 액션을 취한다.&#10;convolusion" />
-    <option name="LAST_COMMIT_MESSAGE" value="n개의 종목에 3 ** n 가지 액션을 취한다.&#10;convolusion" />
+    <MESSAGE value="설정&#10;1. 하나의 주식에 대해 구매-판매 한번씩 이루어지는 것을 하나의 에피소드로 설정 &#10;2. 60일동안의 히스트리를 관찰&#10;3. simple linear 모델 적용&#10;&#10;실행 커맨드 &#10;$ python train_single_model.py --cuda &gt;&amp; test" />
+    <option name="LAST_COMMIT_MESSAGE" value="설정&#10;1. 하나의 주식에 대해 구매-판매 한번씩 이루어지는 것을 하나의 에피소드로 설정 &#10;2. 60일동안의 히스트리를 관찰&#10;3. simple linear 모델 적용&#10;&#10;실행 커맨드 &#10;$ python train_single_model.py --cuda &gt;&amp; test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cnf/APConfig.py</url>
+          <line>31</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -658,13 +711,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="3" column="43" selection-start-line="3" selection-start-column="43" selection-end-line="3" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test_smenviron.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -676,13 +722,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7935">
           <caret line="532" selection-start-line="532" selection-end-line="532" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/apdb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
         </state>
       </provider>
     </entry>
@@ -704,44 +743,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="471">
           <caret line="130" column="47" lean-forward="true" selection-start-line="130" selection-start-column="47" selection-end-line="130" selection-end-column="47" />
+          <folding>
+            <element signature="e#76#87#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ptan/common/wrappers.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ptan/experience.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="382" column="47" selection-start-line="382" selection-start-column="47" selection-end-line="382" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="526">
           <caret line="1663" column="10" lean-forward="true" selection-start-line="1663" selection-start-column="10" selection-end-line="1663" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1695">
-          <caret line="116" selection-start-line="116" selection-end-line="116" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1541579825675" expanded="true" signature="201:257" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1365">
-          <caret line="107" selection-start-line="107" selection-end-line="107" />
-          <folding>
-            <element signature="e#23#32#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -752,10 +766,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cnf/config.json">
+    <entry file="file://$PROJECT_DIR$/lib/common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
+        <state relative-caret-position="487">
+          <caret line="38" column="32" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ptan/experience.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="958">
+          <caret line="78" column="46" lean-forward="true" selection-start-line="78" selection-start-column="46" selection-end-line="78" selection-end-column="46" />
         </state>
       </provider>
     </entry>
@@ -766,53 +790,97 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cnf/APConfig.py">
+    <entry file="file://$PROJECT_DIR$/train_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="28" selection-start-line="4" selection-start-column="28" selection-end-line="4" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/environ.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2550">
-          <caret line="175" selection-start-line="175" selection-end-line="175" />
+        <state relative-caret-position="844">
+          <caret line="67" selection-start-line="67" selection-end-line="67" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <marker date="1541591375493" expanded="true" signature="796:2218" ph="..." />
-            <marker date="1541591375493" expanded="true" signature="1210:1215" ph="..." />
-            <marker date="1541591375493" expanded="true" signature="1272:1276" ph="..." />
-            <marker date="1541591375493" expanded="true" signature="6300:6305" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/common.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="38" column="32" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="870">
-          <caret line="63" column="37" selection-start-line="63" selection-start-column="37" selection-end-line="63" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#23#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/validation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="495">
+          <caret line="33" column="60" selection-start-line="33" selection-start-column="60" selection-end-line="33" selection-end-column="60" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="60" column="41" selection-start-line="60" selection-start-column="41" selection-end-line="60" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-299">
+          <caret line="38" column="40" selection-start-line="38" selection-start-column="40" selection-end-line="38" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1541579825675" expanded="true" signature="201:257" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cnf/APConfig.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="583">
+          <caret line="90" selection-start-line="90" selection-end-line="90" />
+          <folding>
+            <marker date="1541676473455" expanded="true" signature="612:1852" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cnf/config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="48" selection-start-line="48" selection-end-line="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/train_single_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="611">
+          <caret line="101" selection-start-line="101" selection-end-line="101" />
+          <folding>
+            <element signature="e#23#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/apdb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/environ.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="362">
+          <caret line="297" column="9" selection-start-line="297" selection-start-column="9" selection-end-line="297" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -35,19 +35,19 @@ class SimpleFFDQN(nn.Module):
         super(SimpleFFDQN, self).__init__()
 
         self.fc_val = nn.Sequential(
-            nn.Linear(obs_len, 512),
+            nn.Linear(obs_len, 1024),
             nn.ReLU(),
-            nn.Linear(512, 512),
+            nn.Linear(1024, 1024),
             nn.ReLU(),
-            nn.Linear(512, 1)
+            nn.Linear(1024, 1)
         )
 
         self.fc_adv = nn.Sequential(
-            nn.Linear(obs_len, 512),
+            nn.Linear(obs_len, 1024),
             nn.ReLU(),
-            nn.Linear(512, 512),
+            nn.Linear(1024, 1024),
             nn.ReLU(),
-            nn.Linear(512, actions_n)
+            nn.Linear(1024, actions_n)
         )
 
     def forward(self, x):
