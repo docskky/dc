@@ -7,7 +7,7 @@ import json
 class APConfig:
     env = None
 
-    def __init__(self):
+    def __init__(self, phase):
         with open('./cnf/config.json') as file:
             self.env = json.load(file)
         assert (self.env is not None)
@@ -18,6 +18,7 @@ class APConfig:
         self.db_name = self.env["db_name"]
         self.bars_count = self.env["bars_count"]
         self.commission_rate = self.env["commission_rate"]
+        self.sale_tax_rate = self.env["sale_tax_rate"]
 
         self.bar_download_limit = self.env["bar_download_limit"]
         self.choices = self.env["choices"]
@@ -38,5 +39,8 @@ class APConfig:
         self.checkpoint_every_step = self.env["checkpoint_every_step"]
         self.validation_every_step = self.env["validation_every_step"]
         self.run_name = self.env["run_name"]
+
+        self.max_play_days = self.env["max_play_days"]
+
 
 config = APConfig()

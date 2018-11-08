@@ -32,22 +32,17 @@ if __name__ == "__main__":
     saves_path = os.path.join("saves", config.run_name)
     os.makedirs(saves_path, exist_ok=True)
 
-    prices_list, val_prices_list = data.load_prices(config.choices, 0.3)
+    prices_list, val_prices_list = data.load_prices(config.choices)
 
-    stock_env = environ.StocksEnv(prices_list)
-    val_stock_env = environ.StocksEnv(val_prices_list)
+    stock_env = environ.StocksEnvS(prices_list)
+    val_stock_env = environ.StocksEnvS(val_prices_list)
 
-    # env = gym.wrappers.TimeLimit(env, max_episode_steps=1000)
-
-    writer = SummaryWriter(comment=config.run_name)
-    net = models.DQNConv1D(stock_env.observation_space.shape, stock_env.action_space.n).to(device)
-    print(net)
-
+    writer = SummaryWriter(comment="-single-" + args.run)
+    net = models.SimpleFFDQN(stock_env.observation_space.shape[0], stock_env.action_space.n).to(device)
     tgt_net = ptan.agent.TargetNet(net)
     selector = ptan.actions.EpsilonGreedyActionSelector(config.epsilon_start)
     agent = ptan.agent.DQNAgent(net, selector, device=device)
-    exp_source = ptan.experience.ExperienceSourceFirstLast(stock_env, agent, config.gamma,
-                                                           steps_count=config.reward_steps)
+    exp_source = ptan.experience.ExperienceSourceFirstLast(stock_env, agent, config.gamma, steps_count=config.reward_steps)
     buffer = ptan.experience.ExperienceReplayBuffer(exp_source, config.replay_size)
     optimizer = optim.Adam(net.parameters(), lr=config.learning_rate)
 
@@ -86,8 +81,7 @@ if __name__ == "__main__":
 
             optimizer.zero_grad()
             batch = buffer.sample(config.batch_size)
-            loss_v = common.calc_loss(batch, net, tgt_net.target_model, config.gamma ** config.reward_steps,
-                                      device=device)
+            loss_v = common.calc_loss(batch, net, tgt_net.target_model, config.gamma ** config.reward_steps, device=device)
             loss_v.backward()
             optimizer.step()
 

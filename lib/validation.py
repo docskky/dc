@@ -8,7 +8,6 @@ from lib import environ
 def validation_run(env, net, episodes=100, device="cpu", epsilon=0.02):
     stats = {
         'episode_reward': [],
-        'episode_profit': [],
     }
 
     for episode in range(episodes):
@@ -33,7 +32,6 @@ def validation_run(env, net, episodes=100, device="cpu", epsilon=0.02):
 
             if done:
                 stats['episode_reward'].append(total_reward)
-                stats['episode_profit'].append(info["profit"])
                 break
 
     return { key: np.mean(vals) for key, vals in stats.items() }
