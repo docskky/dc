@@ -1,25 +1,30 @@
 import json
+from configparser import ConfigParser
 
+import io
 
 # bars_count : 바라보는 일자수
 # commission_rate : 결제수수료 비율
+
 
 class APConfig:
     env = None
 
     def __init__(self):
-        with open('./cnf/config.json') as file:
-            self.env = json.load(file)
+        self.env = ConfigParser()
+        self.env.read('./cnf/config.ini', 'utf-8')
 
         assert (self.env is not None)
 
-        self.version = self.env["version"]
-        self.db_host = self.env["db_host"]
-        self.db_user = self.env["db_user"]
-        self.db_pw = self.env["db_pw"]
-        self.db_name = self.env["db_name"]
-        self.commission_rate = self.env["commission_rate"]
-        self.sale_tax_rate = self.env["sale_tax_rate"]
+        self.version = self.env["global"]["version"]
+        self.db_host = self.env["global"]["db_host"]
+        self.db_user = self.env["global"]["db_user"]
+        self.db_pw = self.env["global"]["db_pw"]
+        self.db_name = self.env["global"]["db_name"]
+        self.commission_rate = self.env["global"]["commission_rate"]
+        self.sale_tax_rate = self.env["global"]["sale_tax_rate"]
+
+        self.bar_download_limit = self.env["global"]["bar_download_limit"]
 
 
 class SinglePhaseConfig(APConfig):
@@ -31,7 +36,6 @@ class SinglePhaseConfig(APConfig):
 
         self.normal_bars_count = penv["normal_bars_count"]
         self.long_bars_count = penv["long_bars_count"]
-        self.bar_download_limit = penv["bar_download_limit"]
         self.choices = penv["choices"]
         self.play_days = penv["play_days"]
 
@@ -61,9 +65,8 @@ class MultiPhaseConfig(APConfig):
         penv = self.env["multi_phase"]
         assert (penv is not None)
 
-        self.bars_count = penv["bars_count"]
-        self.bar_download_limit = penv["bar_download_limit"]
         self.choices = penv["choices"]
+        self.position_limit = penv["position_limit"]
         self.play_days = penv["play_days"]
 
         self.batch_size = penv["batch_size"]
@@ -87,4 +90,4 @@ class MultiPhaseConfig(APConfig):
 
 sconfig = SinglePhaseConfig()
 
-mconfig = SinglePhaseConfig()
+mconfig = MultiPhaseConfig()
