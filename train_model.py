@@ -23,6 +23,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action="store_true", help="Enable cuda")
     parser.add_argument("-phase", "--phase", default="2", help="Phase[1-2]")
+    parser.add_argument("-pm", "--premodel", default="data/phase1_model.data", help="Model file to load")
     # parser.add_argument("--data", default=DEFAULT_STOCKS, help="Stocks file or dir to train on, default=" + DEFAULT_STOCKS)
     # parser.add_argument("--year", type=int, help="Year to be used for training, if specified, overrides --data option")
     # parser.add_argument("--valdata", default=DEFAULT_VAL_STOCKS, help="Stocks data for validation, default=" + DEFAULT_VAL_STOCKS)
@@ -32,20 +33,26 @@ if __name__ == "__main__":
     phase = int(args.phase)
     config = sconfig if phase == 1 else mconfig
 
-    run_name = "v" + sconfig.version + "-phase" + phase
+    run_name = "v" + config.version + "-phase" + str(phase)
     saves_path = os.path.join("saves", run_name)
     os.makedirs(saves_path, exist_ok=True)
 
     writer = SummaryWriter(comment=run_name)
 
     prices_list, val_prices_list = data.load_prices(config.choices)
+    s_env = environ.StocksEnvS(prices_list)
 
     if phase == 1:
-        stock_env = environ.StocksEnvS(prices_list)
+        stock_env = s_env
         val_stock_env = environ.StocksEnvS(val_prices_list)
     else:
-        stock_env = environ.StocksEnvM(prices_list)
-        val_stock_env = environ.StocksEnvM(val_prices_list)
+        # phase 1 의 network 그래프를 로드한다.
+        prenet = models.SimpleFFDQN(s_env.observation_space.shape[0], s_env.action_space.n) #.to(device)
+        prenet.load_state_dict(torch.load(args.premodel, map_location=lambda storage, loc: storage))
+
+        # phase2 환경 생성
+        stock_env = environ.StocksEnvM(prices_list, prenet)
+        val_stock_env = environ.StocksEnvM(val_prices_list, prenet)
 
     net = models.SimpleFFDQN(stock_env.observation_space.shape[0], stock_env.action_space.n).to(device)
     tgt_net = ptan.agent.TargetNet(net)
@@ -101,7 +108,7 @@ if __name__ == "__main__":
 
             if step_idx % config.checkpoint_every_step == 0:
                 idx = step_idx // config.checkpoint_every_step
-                torch.save(net.state_dict(), os.path.join(saves_path, "checkpoint-%3d.data" % idx))
+                torch.save(net.state_dict(), os.path.join(saves_path, "checkpoint-%d.data" % idx))
 
             if step_idx % config.validation_every_step == 0:
                 res = validation.validation_run(stock_env, net, device=device)

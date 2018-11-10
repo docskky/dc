@@ -57,13 +57,18 @@ class DayAction:
 # 거래 단위 총합은 len(config.choices)+1 개이고 1개씩 거래할수 있다.
 # amounts, values 리스트의 마지막 항목이 현금이다.
 class Assets:
-    def __init__(self, cash=100.0):
+    def __init__(self):
         n_stocks = len(mconfig.choices)
-        n_positions = mconfig.position_limit
         self.amounts = np.zeros((n_stocks + 1,), dtype=int)
         self.values = np.zeros((n_stocks + 1,), dtype=float)
 
-        self.set_cash(cash, n_positions)
+        self.reset()
+
+    def reset(self):
+        n_positions = mconfig.position_limit
+        self.amounts[:] = 0
+        self.values[:] = 0.0
+        self.set_cash(100, n_positions)
 
     def set_cash(self, cash, amount):
         self.amounts[-1] = amount
@@ -111,9 +116,8 @@ class StateM:
     s_net: nn.Module
 
     def __init__(self):
-        self.bars_count = mconfig.bars_count
         self.position_limit = mconfig.position_limit
-        self.assets = None
+        self.assets = Assets()
         self.prices_list = None
         self.offset = 0
         self.days = 0
@@ -125,7 +129,6 @@ class StateM:
             self.s_action_values.append(None)
 
     def reset(self, prices_list, offset, s_net):
-        self.assets = Assets()
         self.prices_list = prices_list
         self.offset = offset
         self.days = 0
@@ -133,6 +136,7 @@ class StateM:
         for idx in range(0, len(prices_list)):
             self.s_states[idx].reset(prices_list[idx], offset)
             self.s_action_values[idx] = self.calculate_action_values(self.s_states[idx])
+        self.assets.reset()
 
     def apply_prices(self):
         n_stocks = len(self.prices_list)
@@ -147,7 +151,7 @@ class StateM:
 
     @property
     def shape(self):
-        return len(self.s_action_values) * len(Action) + len(self.assets.amounts) * 2
+        return len(self.s_action_values) * len(Action) + len(self.assets.amounts) * 2 + 1,
 
     def encode(self):
         """
@@ -225,9 +229,9 @@ class StateM:
 class StocksEnvM(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, prices_list):
+    def __init__(self, prices_list, s_net):
         self._prices_list = prices_list
-
+        self.s_net = s_net
         self._state = StateM()
         self.action_space = gym.spaces.Discrete(n=DayAction.action_size())
         self.observation_space = gym.spaces.Box(low=-np.inf, high=np.inf, shape=self._state.shape, dtype=np.float32)
@@ -235,9 +239,10 @@ class StocksEnvM(gym.Env):
 
     def reset(self):
         # make selection of the instrument and it's offset. Then reset the state
-        bars = mconfig.bars_count
-        offset = self.np_random.choice(self._prices_list[0].high.shape[0] - bars - mconfig.play_days) + bars
-        self._state.reset(self._prices_list, offset)
+        bars = sconfig.bars_count
+        len =self._prices_list[0].high.shape[0]
+        offset = self.np_random.choice(len - bars - mconfig.play_days) + bars
+        self._state.reset(self._prices_list, offset, self.s_net)
         return self._state.encode()
 
     def step(self, action_idx):
@@ -396,11 +401,17 @@ class StocksEnvS(gym.Env):
         self.observation_space = gym.spaces.Box(low=-np.inf, high=np.inf, shape=self._state.shape, dtype=np.float32)
         self.np_random = seed()[0]
 
-    def reset(self):
+    def reset(self, stock_index=None, offset=None):
         # make selection of the instrument and it's offset. Then reset the state
-        bars = sconfig.normal_bars_count+sconfig.long_bars_count
-        offset = self.np_random.choice(self._prices_list[0].high.shape[0] - bars - bars) + bars
-        self.stock_idx = self.np_random.choice(len(self._prices_list))
+        _offset = 0
+        if stock_index and offset:
+            self.stock_idx = stock_index
+            _offset = offset
+        else:
+            bars = sconfig.bars_count
+            _offset = self.np_random.choice(self._prices_list[0].high.shape[0] - bars - bars) + bars
+            self.stock_idx = self.np_random.choice(len(self._prices_list))
+
         self._state.reset(self._prices_list[self.stock_idx], offset)
         return self._state.encode()
 
