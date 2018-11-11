@@ -117,6 +117,7 @@ class StateM:
 
     def __init__(self):
         self.position_limit = mconfig.position_limit
+        self.watch_size = mconfig.watch_size
         self.assets = Assets()
         self.prices_list = None
         self.offset = 0
@@ -151,7 +152,7 @@ class StateM:
 
     @property
     def shape(self):
-        return len(self.s_action_values) * len(Action) + len(self.assets.amounts) * 2 + 1,
+        return len(self.s_action_values) * len(Action) + len(self.assets.amounts) * 2 + self.s_states[0].shape[0]*self.watch_size + 1,
 
     def encode(self):
         """
@@ -170,6 +171,32 @@ class StateM:
         shift += n_amounts
         res[shift] = self.days
         shift += 1
+
+        sorted_idxs = np.array(self.s_action_values).argsort(axis=0)
+
+        # 현재 보유하고 있는 주식의 히스토리를 encode 한다.
+        n_watching = 0
+        for idx, amt in enumerate(self.assets.amounts):
+            if amt > 0 and idx < n_amounts-1:
+                sorted_idxs[idx][0] = -1
+                size = self.s_states[idx].shape[0]
+                res[shift: shift+size] = self.s_states[idx].encode()
+                shift += size
+                n_watching += 1
+
+        # 나머지 주식중 s_action_values 값이 높은 주식을 encode 한다.
+        cnt = self.watch_size-n_watching
+        idx = 0
+        while cnt > 0:
+            while sorted_idxs[idx][0] < 0:
+                idx += 1
+            s_idx = sorted_idxs[idx][0]
+            size = self.s_states[s_idx].shape[0]
+            res[shift: shift+size] = self.s_states[s_idx].encode()
+            shift += size
+            idx += 1
+            cnt -= 1
+
 
         return res
 

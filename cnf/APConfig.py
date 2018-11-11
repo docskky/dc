@@ -70,6 +70,7 @@ class MultiPhaseConfig(APConfig):
 
         self.choices = [e.strip() for e in penv["choices"].split(',')]
         self.position_limit = int(penv["position_limit"])
+        self.watch_size = int(penv["watch_size"])
         self.play_days = int(penv["play_days"])
 
         self.batch_size = int(penv["batch_size"])
