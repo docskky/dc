@@ -25,6 +25,8 @@ class APConfig:
         self.commission_rate = float(self.env["global"]["commission_rate"])
         self.sale_tax_rate = float(self.env["global"]["sale_tax_rate"])
 
+        self.history_begin = self.env["global"]["history_begin"]
+
         self.bar_download_limit = int(self.env["global"]["bar_download_limit"])
 
 

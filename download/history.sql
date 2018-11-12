@@ -24,6 +24,14 @@ CREATE TABLE IF NOT EXISTS aistocks.stocks (
 )  ENGINE=INNODB character set = utf8;
 
 
+DROP TABLE IF EXISTS aistocks.currency;
+CREATE TABLE IF NOT EXISTS aistocks.currency (
+    name CHAR(3),
+    date DATE,
+    rate FLOAT,
+    PRIMARY KEY (name, date)
+)  ENGINE=INNODB character set = utf8;
+
 
 # 상장폐지된 회사 제거
 delete from stocks where stocks.scode not in (select hd.scode from history_days hd where hd.date=(select max(hd.date) from history_days hd));

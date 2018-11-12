@@ -39,7 +39,7 @@ def _store_db(db, name, ticker, ext):
 
 
     print('Saving '+name+'['+ticker+']')
-    while(count < 100):
+    while count < 100:
         try:
             #cursor = db.cursor(prepared=True)
             df = data.get_data_yahoo(ticker + '.'+ext, START_DATE, thread=20)
