@@ -38,20 +38,24 @@ def download_currency():
                 info = json.loads(cdata.read())
                 rates = info["rates"]
 
+                cursor = db.cursor()
                 for name, rate in rates.items():
-                    db.execute(stmt1, (name, date.strftime('%Y-%m-%d'), rate))
+                    cursor.execute(stmt1, (name, date.strftime('%Y-%m-%d'), rate))
+                cursor.close()
                 db.commit()
                 print('write:', str(date))
                 done = True
             except Exception as ex:
                 print(ex)
-                print('Failed to download ' + name + '. Retrying...')
+                print('Failed to download ' + str(date) + '. Retrying...')
                 time.sleep(10)
                 count += 1
                 continue
 
+
         # 다음날을 지정
         date = date + datetime.timedelta(days=1)
+    db.close()
 
 
 download_currency()

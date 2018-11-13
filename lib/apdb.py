@@ -25,6 +25,10 @@ class APDatabase(object):
         if self._db is None:
             return
         self._db.close()
+        self._db = None
+
+    def cursor(self):
+        return self._db.cursor(prepared=True)
 
     def execute_list(self, stmt, params, cursor=None):
         if cursor is None:
@@ -38,4 +42,5 @@ class APDatabase(object):
         if cursor is None:
             cursor = self._db.cursor(prepared=True)
         cursor.execute(stmt, params)
+
         return cursor
