@@ -1,3 +1,4 @@
+import sys
 from urllib.request import urlopen
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -20,20 +21,22 @@ def download_list():
     db = apdb()
     db.connect()
 
-    stmt_insert = "insert IGNORE into profits (scode, date, totals, pure_profit) VALUES (%s,%s,%s,%s);";
+    stmt_insert = "insert IGNORE into fstatment (scode, date, current_asset, static_asset, current_dept, \
+        static_dept, capital, total_assets, income, expense, pure_profit) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);";
 
     s_dt = config.history_begin.replace('-', '')
-    url_format = "http://dart.fss.or.kr/api/search.json?page_no={}&start_dt={}&auth={}&crp_cd={}"
+    url_format = "http://dart.fss.or.kr/api/search.json?crp_cd={}&page_no={}&start_dt={}&auth={}"
     cursor = db.cursor()
     cursor.execute("select scode from stocks")
 
     for row in cursor:
-        scode = row[0]
+        scode = row[0].decode()
         code = scode[2:]
         page_no = 1
         total_page = 1
         while total_page >= page_no:
-            report = urlopen(url_format.format(page_no, s_dt, FSS_KEY, code))
+            request_url = url_format.format(code, page_no, s_dt, FSS_KEY)
+            report = urlopen(request_url)
             info = json.load(report)
             if info["err_code"] == "000":
                 total_page = int(info["total_page"])
@@ -43,8 +46,7 @@ def download_list():
                     result = get_fss(rcp_no)
                     if result:
                         dates = result[0]
-                        total_values = result[1]
-                        profit_values = result[2]
+                        info_tbl = result[1]
 
                         cursor2 = db.cursor()
                         for i in range(0, len(dates)):
@@ -78,58 +80,49 @@ def get_fss(rcp_no):
 
         head = parser.make2d(tables[0])
         dates = []
-        dstr = re.search(r'(\d+.\d+.\d+)', head[1][0])
-        date = datetime.datetime.strptime(dstr.group(1), "%Y.%m.%d").date()
-        dates.append(date)
-        dstr = re.search(r'(\d+.\d+.\d+)', head[2][0])
-        date = datetime.datetime.strptime(dstr.group(1), "%Y.%m.%d").date()
-        dates.append(date)
+        for grp in range(1, len(head)-1):
+            dstr = re.search(r'(\d+.\d+.\d+)', head[grp][0])
+            date = datetime.datetime.strptime(dstr.group(1), "%Y.%m.%d").date()
+            dates.append(date)
 
-        if not dates[0] or not dates[1]:
+        if len(dates) == 0:
             return
 
-        total_values = []
+        info_tbl = {}
         totals = parser.make2d(tables[1])
 
         # 자산
         for idx in range(0, len(totals)):
-            if totals[idx][0] == '자본과부채총계':
-                m = strip_money(totals[idx][1])
-                total_values.append(m)
-                m = strip_money(totals[idx][2])
-                total_values.append(m)
-                break
+            list = []
+            for grp in range(1, len(dates)+1):
+                list.append(strip_money(totals[idx][grp]))
+            info_tbl[totals[idx][0].strip()] = list
 
-        if len(total_values) < 2:
-            return
-
-        profit_values = []
+        strip_money(totals[idx][2])
         # 당기순이익
         profits = parser.make2d(tables[3])
         for idx in range(0, len(profits)):
-            if '당기순이익' in profits[idx][0]:
-                m = strip_money(profits[idx][1])
-                profit_values.append(m)
-                m = strip_money(profits[idx][3])
-                profit_values.append(m)
-                break
+            list = []
+            for grp in range(0, len(dates)):
+                list.append(strip_money(profits[idx][1+grp*2]))
+            info_tbl[totals[idx][0].strip()] = list
 
-        if len(profit_values) < 2:
-            return
-
-        return dates, total_values, profit_values
+        return dates, info_tbl
 
     except:
-        pass
+        print("Unexpected error:", sys.exc_info()[0])
 
     return
 
 
 def strip_money(txt):
-    value = float(Decimal(sub(r'[^\d.]', '', txt)))
-    if '(' in txt:
-        value = -value
-    return value
+    try:
+        value = float(Decimal(sub(r'[^\d.]', '', txt)))
+        if '(' in txt:
+            value = -value
+        return value
+    except:
+        return 0.0
 
 
 download_list()

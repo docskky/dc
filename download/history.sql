@@ -32,12 +32,20 @@ CREATE TABLE IF NOT EXISTS aistocks.currency (
     PRIMARY KEY (name, date)
 )  ENGINE=INNODB character set = utf8;
 
-DROP TABLE IF EXISTS aistocks.profits;
-CREATE TABLE IF NOT EXISTS aistocks.profits (
+DROP TABLE IF EXISTS aistocks.fstatment;
+CREATE TABLE IF NOT EXISTS aistocks.fstatment (
     scode CHAR(10),
     date DATE,
-    totals LONG,
-    pure_profit LONG,
+    current_asset LONG, # 유동자산
+    static_asset LONG, # 비유동자산
+    current_dept LONG, # 유동부채
+    static_dept LONG, # 비유동부채
+    capital LONG, # 자본총계
+    total_assets LONG, # 자본과부채총계
+
+    income LONG, # 영업수익
+    expense LONG, # 영업비용
+    pure_profit LONG, # 당기순이익
     PRIMARY KEY (scode, date)
 )  ENGINE=INNODB character set = utf8;
 
