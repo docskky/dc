@@ -37,7 +37,6 @@ def _store_db(db, name, ticker, ext):
     cursor = db.cursor(prepared=True)
     cursor.execute(stmt1, (scode, name))
 
-
     print('Saving '+name+'['+ticker+']')
     while count < 100:
         try:
