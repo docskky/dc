@@ -4,6 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from cnf.APConfig import mconfig
 
 
 class NoisyLinear(nn.Linear):
@@ -31,23 +32,27 @@ class NoisyLinear(nn.Linear):
 
 
 class SimpleFFDQN(nn.Module):
-    def __init__(self, obs_len, actions_n):
+    tensor_width: int
+
+    def __init__(self, obs_len, actions_n, tensor_width=mconfig.tensor_width):
         super(SimpleFFDQN, self).__init__()
 
+        self.tensor_width = tensor_width
+
         self.fc_val = nn.Sequential(
-            nn.Linear(obs_len, 1024),
+            nn.Linear(obs_len, self.tensor_width),
             nn.ReLU(),
-            nn.Linear(1024, 1024),
+            nn.Linear(self.tensor_width, self.tensor_width),
             nn.ReLU(),
-            nn.Linear(1024, 1)
+            nn.Linear(self.tensor_width, 1)
         )
 
         self.fc_adv = nn.Sequential(
-            nn.Linear(obs_len, 1024),
+            nn.Linear(obs_len, self.tensor_width),
             nn.ReLU(),
-            nn.Linear(1024, 1024),
+            nn.Linear(self.tensor_width, self.tensor_width),
             nn.ReLU(),
-            nn.Linear(1024, actions_n)
+            nn.Linear(self.tensor_width, actions_n)
         )
 
     def forward(self, x):

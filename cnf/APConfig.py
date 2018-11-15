@@ -28,7 +28,7 @@ class APConfig:
         self.history_begin = self.env["global"]["history_begin"]
 
         self.bar_download_limit = int(self.env["global"]["bar_download_limit"])
-
+        self.tensor_width = int(self.env["global"]["tensor_width"])
 
 class SinglePhaseConfig(APConfig):
     def __init__(self):
