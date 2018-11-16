@@ -23,6 +23,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action="store_true", help="Enable cuda")
     parser.add_argument("-phase", "--phase", default="2", help="Phase[1-2]")
+
+    # phase 2인 경우 적용
     parser.add_argument("-pm", "--premodel", default="data/phase1_model.data", help="Model file to load")
     # parser.add_argument("--data", default=DEFAULT_STOCKS, help="Stocks file or dir to train on, default=" + DEFAULT_STOCKS)
     # parser.add_argument("--year", type=int, help="Year to be used for training, if specified, overrides --data option")

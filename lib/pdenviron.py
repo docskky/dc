@@ -17,34 +17,52 @@ def seed(seed=None):
     return [np_random, seed1, seed2]
 
 
-class Action(enum.Enum):
+class PredAction(enum.Enum):
     Idle = 0
-    Buy = 1
-    Sell = 2
+    Up = 1
+    BigUp = 2
+    Down = 3
+    BigDown = 4
 
 
-# @classmethod
-# def from_dir(cls, data_dir, **kwargs):
-#    prices = {file: data.load_relative(file) for file in data.price_files(data_dir)}
-#    return StocksEnv(prices, **kwargs)
-class StateS:
+def action_for_netprice(netprice: float):
+    if netprice > 0.05:
+        return PredAction.BigUp
+    elif netprice > 0.01:
+        return PredAction.Up
+    elif netprice > -0.01:
+        return PredAction.Idle
+    elif netprice > -0.05:
+        return PredAction.Down
+    else:
+        return PredAction.BigDown
+
+
+def close_price(prices, offset):
+    """
+    Calculate real close price for the offset
+    """
+    return prices.open[offset] * (1.0 + prices.close[offset])
+
+
+class PredState:
     offset: int
+    term: int
+    days: int
 
-    def __init__(self):
+    # term: 예측 기간
+    def __init__(self, term=7):
         self.normal_bars_count = sconfig.normal_bars_count
         self.long_bars_count = sconfig.long_bars_count
-        self.has_position = False
         self.prices = None
         self.offset = 0
         self.days = 0
-        self.open_price = 0.0
+        self.term = term
 
     def reset(self, prices, offset):
-        self.has_position = False
         self.prices = prices
         self.offset = offset
         self.days = 0
-        self.open_price = 0.0
 
     @property
     def shape(self):
@@ -105,31 +123,28 @@ class StateS:
         return res
 
     def step(self, action):
-        assert isinstance(action, Action)
+        assert isinstance(action, PredAction)
 
         reward = 0.0
         done = False
         close = self._cur_close()
 
         # 휴일에 대한 액션은 취하지 않게 한다.
-        if not self.prices.work[self.offset]:
-            action = Action.Idle
+        if self.prices.work[self.offset]:
+            future_price = close_price(self.prices, self.offset+self.term)
+            if action == PredAction.BigUp:
+                reward = (future_price-self.prices.open[self.offset])
+            elif action == PredAction.Sell and self.has_position:
+                reward -= reward * (sconfig.commission_rate + sconfig.sale_tax_rate)
+                done = True
+                reward += 100.0 * (close - self.open_price) / self.open_price
+                self.has_position = False
+                self.open_price = 0.0
 
+        # 게임 종료 여부 체크
         if self.days + 1 >= sconfig.max_play_days \
-                or self.offset + 1 >= self.prices.close.shape[0] - 1:
-            action = Action.Sell
+                or self.offset+self.term + 1 >= self.prices.close.shape[0] - 1:
             done = True
-
-        if action == Action.Buy and not self.has_position:
-            self.has_position = True
-            self.open_price = close
-            reward -= reward * sconfig.commission_rate
-        elif action == Action.Sell and self.has_position:
-            reward -= reward * (sconfig.commission_rate + sconfig.sale_tax_rate)
-            done = True
-            reward += 100.0 * (close - self.open_price) / self.open_price
-            self.has_position = False
-            self.open_price = 0.0
 
         self.offset += 1
         self.days += 1
@@ -148,6 +163,7 @@ class StateS:
         open = self.prices.open[self.offset]
         rel_close = self.prices.close[self.offset]
         return open * (1.0 + rel_close)
+
 
 
 class StocksEnvS(gym.Env):
