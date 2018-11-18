@@ -17,6 +17,12 @@ def seed(seed=None):
     return [np_random, seed1, seed2]
 
 
+def apply_model_from_state(data, net):
+    state_v = torch.tensor(data)
+    values_v = net(state_v)
+    return values_v.detach().numpy()
+
+
 class Action(enum.Enum):
     Idle = 0
     Buy = 1
@@ -300,6 +306,7 @@ class StateS:
     def __init__(self):
         self.normal_bars_count = sconfig.normal_bars_count
         self.long_bars_count = sconfig.long_bars_count
+        self.commission_rate = sconfig.commission_rate
         self.has_position = False
         self.prices = None
         self.offset = 0
@@ -390,9 +397,9 @@ class StateS:
         if action == Action.Buy and not self.has_position:
             self.has_position = True
             self.open_price = close
-            reward -= reward * sconfig.commission_rate
+            reward -= reward * self.commission_rate
         elif action == Action.Sell and self.has_position:
-            reward -= reward * (sconfig.commission_rate + sconfig.sale_tax_rate)
+            reward -= reward * (self.commission_rate + sconfig.sale_tax_rate)
             done = True
             reward += 100.0 * (close - self.open_price) / self.open_price
             self.has_position = False

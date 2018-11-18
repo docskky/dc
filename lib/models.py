@@ -7,6 +7,20 @@ import torch.nn.functional as F
 from cnf.APConfig import mconfig
 
 
+def save_model(filepath, model, user_info):
+    info = {
+        "net": model.state_dict(),
+        "user_info": user_info
+    }
+    torch.save(info, filepath)
+
+
+def load_model(filepath, model):
+    info = torch.load(filepath, map_location=lambda storage, loc: storage)
+    model.load_state_dict(info["net"])
+    return info
+
+
 class NoisyLinear(nn.Linear):
     def __init__(self, in_features, out_features, sigma_init=0.017, bias=True):
         super(NoisyLinear, self).__init__(in_features, out_features, bias=bias)

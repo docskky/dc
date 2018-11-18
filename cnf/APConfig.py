@@ -30,6 +30,7 @@ class APConfig:
         self.bar_download_limit = int(self.env["global"]["bar_download_limit"])
         self.tensor_width = int(self.env["global"]["tensor_width"])
 
+
 class SinglePhaseConfig(APConfig):
     def __init__(self):
         super(SinglePhaseConfig, self).__init__()
@@ -58,6 +59,7 @@ class SinglePhaseConfig(APConfig):
         self.epsilon_steps = int(penv["epsilon_steps"])
         self.checkpoint_every_step = int(penv["checkpoint_every_step"])
         self.validation_every_step = int(penv["validation_every_step"])
+        self.end_step = int(penv["end_step"])
         self.run_name = penv["run_name"]
 
         self.max_play_days = int(penv["max_play_days"])
@@ -89,11 +91,46 @@ class MultiPhaseConfig(APConfig):
         self.epsilon_steps = int(penv["epsilon_steps"])
         self.checkpoint_every_step = int(penv["checkpoint_every_step"])
         self.validation_every_step = int(penv["validation_every_step"])
+        self.end_step = int(penv["end_step"])
         self.run_name = penv["run_name"]
 
         #self.max_play_days = penv["max_play_days"]
 
 
+class PredictPhaseConfig(APConfig):
+    def __init__(self):
+        super(PredictPhaseConfig, self).__init__()
+
+        penv = self.env["predict_phase"]
+        assert (penv is not None)
+
+        self.normal_bars_count = int(penv["normal_bars_count"])
+        self.long_bars_count = int(penv["long_bars_count"])
+        self.bars_count = self.normal_bars_count + self.long_bars_count
+        self.choices = [e.strip() for e in penv["choices"].split(',')]
+
+        self.play_days = int(penv["play_days"])
+
+        self.batch_size = int(penv["batch_size"])
+        self.target_net_sync = int(penv["target_net_sync"])
+        self.gamma = float(penv["gamma"])
+        self.replay_size = int(penv["replay_size"])
+        self.replay_initial = int(penv["replay_initial"])
+        self.reward_steps = int(penv["reward_steps"])
+        self.learning_rate = float(penv["learning_rate"])
+        self.states_to_evaluate = int(penv["states_to_evaluate"])
+        self.eval_every_step = int(penv["eval_every_step"])
+        self.epsilon_start = float(penv["epsilon_start"])
+        self.epsilon_stop = float(penv["epsilon_stop"])
+        self.epsilon_steps = int(penv["epsilon_steps"])
+        self.checkpoint_every_step = int(penv["checkpoint_every_step"])
+        self.validation_every_step = int(penv["validation_every_step"])
+        self.end_step = int(penv["end_step"])
+        self.run_name = penv["run_name"]
+
+
 sconfig = SinglePhaseConfig()
 
 mconfig = MultiPhaseConfig()
+
+pconfig = PredictPhaseConfig()
