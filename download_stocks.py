@@ -9,15 +9,16 @@ import pandas as pd
 import re
 import glob
 import time
-from cnf.APConfig import config
+from cnf.APConfig import sconfig
 from lib.apdb import APDatabase as database
 
 START_DATE = '2000-01-01'
-LIMIT = config.bar_download_limit
+LIMIT = sconfig.bar_download_limit
 stmt1 = "insert IGNORE into stocks (scode, name) VALUES (%s,%s);"
 stmt2 = "insert IGNORE into history_days (scode, date, open, high, low, close, volume) VALUES (%s,%s, %s, %s,%s,%s,%s);"
 stmt3 = "select count(*), stocks.scode, name from stocks left join history_days on stocks.scode = history_days.scode group by stocks.scode;"
 local_path = os.path.dirname(os.path.abspath(__file__))
+
 
 def download_data(db, name, ext):
     pickle = pd.read_pickle(local_path+'/download/'+name+'.pickle')
@@ -29,6 +30,7 @@ def download_data(db, name, ext):
         count += 1
         if LIMIT > 0 and LIMIT == count:
             break
+
 
 def _store_db(db, name, ticker, ext):
     count = 0

@@ -88,10 +88,11 @@ class PredState(StateS):
         done = False
 
         # 휴일에 대한 액션은 취하지 않게 한다.
-        if self.prices.work[self.offset]:
-            open_price = self.prices.open[self.offset]
-            future_price = close_price(self.prices, self.offset+self.predict_days)
-            reward = reward_for_netprice((future_price-open_price) / open_price, action)
+        #if self.prices.work[self.offset]:
+        open_price = self.prices.open[self.offset]
+        future_price = close_price(self.prices, self.offset+self.predict_days)
+        net_price = (future_price-open_price) / open_price
+        reward = reward_for_netprice(net_price, action)
 
         # 게임 종료 여부 체크
         if self.days + 1 >= pconfig.play_days \
@@ -101,7 +102,7 @@ class PredState(StateS):
         self.offset += 1
         self.days += 1
 
-        return reward, done
+        return reward, done, net_price
 
 
 class PredEnv(gym.Env):
@@ -131,10 +132,11 @@ class PredEnv(gym.Env):
 
     def step(self, action_idx):
         action = PredAction(action_idx)
-        reward, done = self._state.step(action)
+        reward, done, net_price = self._state.step(action)
         obs = self._state.encode()
         info = {
-            "offset": self._state.offset
+            "offset": self._state.offset,
+            "net_price": net_price
         }
         return obs, reward, done, info
 

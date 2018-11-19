@@ -21,24 +21,15 @@ import argparse
 from tensorboardX import SummaryWriter
 
 
-# example:
-# $python train_model.py --cuda --phase 1
-# $python train_model.py --cuda --phase 2
-# $python train_model.py --cuda --phase 2 --premodel data/phase1_model.data
-# $python train_model.py --cuda --phase 3 --pdays 14
-if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--cuda", default=False, action="store_true", help="Enable cuda")
-    parser.add_argument("-phase", "--phase", default="3", help="Phase[1-3]: 1-single, 2-multi, 3-prediction")
-    parser.add_argument("-pdays", "--pdays", default="7", help="Predict days")
-
-    # phase 2인 경우 적용
-    parser.add_argument("-pm", "--premodel", default="data/phase1_model.data", help="Model file to load")
-    args = parser.parse_args()
-
-    device = torch.device("cuda" if args.cuda else "cpu")
-    phase = int(args.phase)
+def train_model(cuda, phase, premodel, pdays):
+    """
+    cuda : True / False
+    phase : 1~3
+    premodel: data/phase1_model.data
+    pdays: integer
+    """
+    device = torch.device("cuda" if cuda else "cpu")
+    phase = int(phase)
     if phase == 1:
         config = sconfig
     elif phase == 2:
@@ -65,14 +56,14 @@ if __name__ == "__main__":
         # phase 1 의 network 그래프를 로드한다.
         s_env = environ.StocksEnvS(prices_list)
         prenet = models.SimpleFFDQN(s_env.observation_space.shape[0], s_env.action_space.n) #.to(device)
-        models.load_model(args.premodel, prenet)
+        models.load_model(premodel, prenet)
 
         # phase2 환경 생성
         stock_env = environ.StocksEnvM(prices_list, prenet)
         val_stock_env = environ.StocksEnvM(val_prices_list, prenet)
         save_name = "{}.data".format(run_name)
     elif phase == 3:
-        predict_days = int(args.pdays)
+        predict_days = int(pdays)
         stock_env = pdenviron.PredEnv(prices_list=prices_list, predict_days=7)
         val_stock_env = pdenviron.PredEnv(prices_list=prices_list, predict_days=7)
         save_name = "{}-{}.data".format(run_name, predict_days)
@@ -131,7 +122,7 @@ if __name__ == "__main__":
 
             if step_idx % config.checkpoint_every_step == 0:
                 idx = step_idx // config.checkpoint_every_step
-                #torch.save(net.state_dict(), os.path.join(saves_path, "checkpoint-%d.data" % idx))
+                torch.save(net.state_dict(), os.path.join(saves_path, "checkpoint-%d.data" % idx))
 
             if step_idx % config.validation_every_step == 0:
                 res = validation.validation_run(stock_env, net, device=device)
@@ -141,4 +132,23 @@ if __name__ == "__main__":
                 for key, val in res.items():
                     writer.add_scalar(key + "_val", val, step_idx)
 
-        models.save_model(os.path.join(saves_path, save_name), net)
+        models.save_model(os.path.join(saves_path, save_name), net, {})
+
+
+# example:
+# $python train_model.py --cuda --phase 1
+# $python train_model.py --cuda --phase 2
+# $python train_model.py --cuda --phase 2 --premodel data/phase1_model.data
+# $python train_model.py --cuda --phase 3 --pdays 14
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cuda", default=False, action="store_true", help="Enable cuda")
+    parser.add_argument("-phase", "--phase", default="3", help="Phase[1-3]: 1-single, 2-multi, 3-prediction")
+    parser.add_argument("-pdays", "--pdays", default="7", help="Predict days")
+
+    # phase 2인 경우 적용
+    parser.add_argument("-pm", "--premodel", default="data/phase1_model.data", help="Model file to load")
+    args = parser.parse_args()
+
+    train_model(args.cuda, args.phase, args.premodel, args.pdays)

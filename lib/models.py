@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from cnf.APConfig import mconfig
 
 
-def save_model(filepath, model, user_info):
+def save_model(filepath, model, user_info={}):
     info = {
         "net": model.state_dict(),
         "user_info": user_info
