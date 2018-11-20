@@ -140,6 +140,7 @@ class PredEnv(gym.Env):
         }
         return obs, reward, done, info
 
+
     def render(self, mode='human', close=False):
         pass
 

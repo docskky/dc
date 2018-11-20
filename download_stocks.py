@@ -66,9 +66,6 @@ def _store_db(db, name, ticker, ext):
 #def validate_db():
 #    stmt3
 
-kosdaq = pd.read_pickle(local_path+'/download/kosdaq.pickle')
-kospi = pd.read_pickle(local_path+'/download/kospi.pickle')
-
 db = database.connect()
 
 download_data(db=db, name='kospi', ext='KS')
