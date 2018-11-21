@@ -26,6 +26,8 @@ import lib.data as data
 stmt1 = "insert IGNORE into stocks (scode, name) VALUES (%s,%s);"
 stmt2 = "select max(date) from history_days where scode=%s;"
 stmt3 = "insert IGNORE into history_days (scode, date, open, high, low, close, volume) VALUES (%s,%s, %s, %s,%s,%s,%s);"
+stmt4 = "insert IGNORE into predicts (scode, date, predict_days, expect1, expect2, expect3, expect4, expect5) \
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
 date_format = '%Y-%m-%d'
 
 
@@ -73,31 +75,36 @@ def update_stocks(db, df, ext):
                 print(ex)
 
 
-def update_prediction():
-
-    prices_list, val_prices_list = data.load_prices()
+def update_prediction(db):
 
     # 트래이닝 된 모델을 로드한다.
     predict_days = [7, 14, 30]
     nets = []
-    envs = []
+    # environment의 shape 샘플이 필요하므로 KQ003380 종목을 임의로 로드한다.
+    sample_prices_list, _valid_list = data.load_prices(["KQ003380"])
     for pdays in predict_days:
         file_path = "data/v3.0-phase3-{}.data".format(pdays)
-        env = pdenviron.PredEnv(prices_list=prices_list, predict_days=pdays)
+        env = pdenviron.PredEnv(prices_list=sample_prices_list, predict_days=pdays)
         net = models.SimpleFFDQN(env.observation_space.shape[0], env.action_space.n)
         models.load_model(file_path, net)
 
         nets.append(net)
-        envs.append(env)
 
-    for i in range(0, 10):
-        done = False
-        obs = stock_env.reset()
-        while not done:
-            values = environ.apply_model_from_state(obs, net)
-            action = pdenviron.PredAction(np.argmax(values, axis=0))
-            obs, reward, done, info = stock_env.step(action)
-            print("action:{}, netprice:{}, reward:{}, values:{}".format(action.value, info["net_price"], reward, values))
+    today = datetime.datetime.now().date()
+    with closing(db.cursor()) as cur:
+        cur.execute("select scode from stocks")
+        for row in cur:
+            scode = row[0]
+            prices_list, val_prices_list = data.load_prices([scode])
+            with closing(db.cursor()) as cur2:
+                for i in range(0, len(nets)):
+                    env = pdenviron.PredEnv(prices_list=prices_list, predict_days=pdays)
+
+                    # offset을 마지막 일자로 한다.
+                    obs = env.reset(0, len(prices_list[0].open)-1)
+                    values = environ.apply_model_from_state(obs, nets[i])
+                    # 예측결과 저장
+                    cur2.execute(stmt4, (scode, today, pdays, values[0], values[1], values[2], values[3], values[4]))
 
 
 if __name__ == "__main__":
