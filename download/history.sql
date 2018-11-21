@@ -32,6 +32,19 @@ CREATE TABLE IF NOT EXISTS aistocks.currency (
     PRIMARY KEY (name, date)
 )  ENGINE=INNODB character set = utf8;
 
+DROP TABLE IF EXISTS aistocks.predicts;
+CREATE TABLE IF NOT EXISTS aistocks.predicts (
+    scode CHAR(10),
+    date DATE,
+    predict_days INT,
+    expect1 FLOAT,
+    expect2 FLOAT,
+    expect3 FLOAT,
+    expect4 FLOAT,
+    expect5 FLOAT,
+    PRIMARY KEY (scode, date, predict_days)
+)  ENGINE=INNODB character set = utf8;
+
 DROP TABLE IF EXISTS aistocks.fstatment;
 CREATE TABLE IF NOT EXISTS aistocks.fstatment (
     scode CHAR(10),

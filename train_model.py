@@ -132,7 +132,9 @@ def train_model(cuda, phase, premodel, pdays):
                 for key, val in res.items():
                     writer.add_scalar(key + "_val", val, step_idx)
 
-        models.save_model(os.path.join(saves_path, save_name), net, {})
+        models.save_model(os.path.join(saves_path, save_name), net, {
+            "predict_days" : predict_days
+        })
 
 
 # example:

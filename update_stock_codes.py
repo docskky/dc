@@ -8,6 +8,21 @@ yf.pdr_override()
 from contextlib import closing
 import time
 
+#!/usr/bin/env python3
+import os
+import ptan
+import numpy as np
+
+import torch
+import lib.environ as environ
+import lib.pdenviron as pdenviron
+import lib.models as models
+import lib.data as data
+
+
+"""
+어제 일자까지의 모든 주가를 업데이트 한다.
+"""
 stmt1 = "insert IGNORE into stocks (scode, name) VALUES (%s,%s);"
 stmt2 = "select max(date) from history_days where scode=%s;"
 stmt3 = "insert IGNORE into history_days (scode, date, open, high, low, close, volume) VALUES (%s,%s, %s, %s,%s,%s,%s);"
@@ -56,6 +71,33 @@ def update_stocks(db, df, ext):
                 if count >= 20:
                     done = True
                 print(ex)
+
+
+def update_prediction():
+
+    prices_list, val_prices_list = data.load_prices()
+
+    # 트래이닝 된 모델을 로드한다.
+    predict_days = [7, 14, 30]
+    nets = []
+    envs = []
+    for pdays in predict_days:
+        file_path = "data/v3.0-phase3-{}.data".format(pdays)
+        env = pdenviron.PredEnv(prices_list=prices_list, predict_days=pdays)
+        net = models.SimpleFFDQN(env.observation_space.shape[0], env.action_space.n)
+        models.load_model(file_path, net)
+
+        nets.append(net)
+        envs.append(env)
+
+    for i in range(0, 10):
+        done = False
+        obs = stock_env.reset()
+        while not done:
+            values = environ.apply_model_from_state(obs, net)
+            action = pdenviron.PredAction(np.argmax(values, axis=0))
+            obs, reward, done, info = stock_env.step(action)
+            print("action:{}, netprice:{}, reward:{}, values:{}".format(action.value, info["net_price"], reward, values))
 
 
 if __name__ == "__main__":
