@@ -22,6 +22,6 @@ import argparse
 from tensorboardX import SummaryWriter
 
 if __name__ == "__main__":
-
-    for pdays in [14, 30]:
+    sconfig.
+    for pdays in [7, 14, 30]:
         train_model.train_model(cuda=True, phase=3, premodel=None, pdays=pdays)

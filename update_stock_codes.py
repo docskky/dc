@@ -12,7 +12,7 @@ import time
 import os
 import ptan
 import numpy as np
-
+import lib.log as log
 import torch
 import lib.environ as environ
 import lib.pdenviron as pdenviron
@@ -31,6 +31,8 @@ stmt3 = "insert into history_days (scode, date, open, high, low, close, volume) 
 stmt4 = "insert IGNORE into predicts (scode, date, predict_days, expect1, expect2, expect3, expect4, expect5) \
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
 date_format = '%Y-%m-%d'
+
+logger = log.logger(os.path.basename(__file__))
 
 
 def update_stocks(db, df, ext):
@@ -79,7 +81,7 @@ def update_stocks(db, df, ext):
                 count += 1
                 if count >= 20:
                     done = True
-                print(ex)
+                logger.error('get_data_yahoo() failed:'+str(ex))
 
 
 def update_prediction(db):
@@ -119,7 +121,7 @@ def update_prediction(db):
                         # 예측결과 저장
                         cur2.execute(stmt4, (scode, today, pdays, values[0], values[1], values[2], values[3], values[4]))
             except Exception as ex:
-                print(ex)
+                logger.error('update_prediction() failed:'+str(ex))
 
 
 if __name__ == "__main__":
@@ -127,11 +129,15 @@ if __name__ == "__main__":
     db = apdb()
     db.connect()
 
-    #kosdaq = stockcode.download_stock_codes('kosdaq')
-    #update_stocks(db, kosdaq, 'KQ')
+    kosdaq = stockcode.download_stock_codes('kosdaq')
+    logger.info('Downloading kosdaq codes complete.' + str(kosdaq.shape[0]))
 
-    #kospi = stockcode.download_stock_codes('kospi')
-    #update_stocks(db, kospi, 'KS')
+    update_stocks(db, kosdaq, 'KQ')
+
+    kospi = stockcode.download_stock_codes('kospi')
+    logger.info('Downloading kospi codes complete.' + str(kospi.shape[0]))
+
+    update_stocks(db, kospi, 'KS')
 
     update_prediction(db)
 
